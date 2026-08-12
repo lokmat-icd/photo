@@ -19,7 +19,6 @@
         }
         .container-fluid { max-width: 1400px; margin: 0 auto; }
 
-        /* SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #161b22; border-radius: 3px; }
         ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
@@ -334,7 +333,6 @@
             padding: 0 2px;
         }
 
-        /* FAB Button */
         .fab-container {
             display: flex;
             align-items: center;
@@ -398,7 +396,6 @@
             font-weight: 100;
         }
 
-        /* ADS GRID */
         .ads-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -556,9 +553,7 @@
         }
         .loading-spinner i { font-size: 28px; margin-bottom: 10px; display: block; color: #58a6ff; }
 
-        /* ============================================================
-           MODAL - COMPLETE OVERRIDE FOR BOOTSTRAP
-           ============================================================ */
+        /* MODAL */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -678,16 +673,10 @@
             transform: none;
         }
 
-        /* ============================================================
-           CRITICAL: OVERRIDE BOOTSTRAP FORM-CONTROL IN MODAL
-           ============================================================ */
         .modal-overlay input,
         .modal-overlay select,
         .modal-overlay textarea,
-        .modal-overlay .form-control,
-        .modal-overlay input.form-control,
-        .modal-overlay select.form-control,
-        .modal-overlay textarea.form-control {
+        .modal-overlay .form-control {
             background: #0d1117 !important;
             color: #e6edf3 !important;
             border: 1px solid #30363d !important;
@@ -695,69 +684,19 @@
             padding: 8px 12px !important;
             font-size: 13px !important;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-            -webkit-box-shadow: none !important;
             box-shadow: none !important;
             transition: all 0.3s ease !important;
             width: 100% !important;
             height: auto !important;
         }
-
         .modal-overlay input:focus,
         .modal-overlay select:focus,
-        .modal-overlay textarea:focus,
-        .modal-overlay .form-control:focus,
-        .modal-overlay input.form-control:focus,
-        .modal-overlay select.form-control:focus,
-        .modal-overlay textarea.form-control:focus {
+        .modal-overlay textarea:focus {
             border-color: #58a6ff !important;
             box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15) !important;
-            background: #0d1117 !important;
-            color: #e6edf3 !important;
             outline: none !important;
         }
 
-        .modal-overlay input:hover,
-        .modal-overlay select:hover,
-        .modal-overlay textarea:hover,
-        .modal-overlay .form-control:hover {
-            border-color: #484f58 !important;
-        }
-
-        .modal-overlay input:disabled,
-        .modal-overlay select:disabled,
-        .modal-overlay textarea:disabled,
-        .modal-overlay .form-control:disabled {
-            background: #161b22 !important;
-            color: #484f58 !important;
-            cursor: not-allowed !important;
-            opacity: 0.7 !important;
-        }
-
-        .modal-overlay input::placeholder,
-        .modal-overlay select::placeholder,
-        .modal-overlay textarea::placeholder,
-        .modal-overlay .form-control::placeholder {
-            color: #484f58 !important;
-        }
-
-        .modal-overlay input:-webkit-autofill,
-        .modal-overlay input:-webkit-autofill:hover,
-        .modal-overlay input:-webkit-autofill:focus,
-        .modal-overlay input:-webkit-autofill:active,
-        .modal-overlay .form-control:-webkit-autofill,
-        .modal-overlay .form-control:-webkit-autofill:hover,
-        .modal-overlay .form-control:-webkit-autofill:focus,
-        .modal-overlay .form-control:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 30px #0d1117 inset !important;
-            -webkit-text-fill-color: #e6edf3 !important;
-            caret-color: #e6edf3 !important;
-            background-color: #0d1117 !important;
-            background: #0d1117 !important;
-        }
-
-        /* ============================================================
-           THREE COLUMN EDIT FORM - LAYOUT ONLY
-           ============================================================ */
         .ad-edit-form {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -782,7 +721,6 @@
             color: #f85149;
             margin-left: 2px;
         }
-
         .ad-edit-form .form-group .readonly-display {
             padding: 8px 12px;
             border-radius: 6px;
@@ -794,16 +732,11 @@
             display: flex;
             align-items: center;
         }
-
         .ad-edit-form .form-group .date-format-hint {
             font-size: 10px;
             color: #484f58;
             margin-top: 3px;
             font-style: italic;
-        }
-        .ad-edit-form .form-group .date-format-hint i {
-            margin-right: 4px;
-            color: #8b949e;
         }
         .ad-edit-form .form-group .date-error {
             color: #f85149;
@@ -814,15 +747,7 @@
         .ad-edit-form .form-group .date-error.show {
             display: block;
         }
-        .ad-edit-form .form-group input.date-error-input {
-            border-color: #f85149 !important;
-        }
-        .ad-edit-form .form-group input.date-error-input:focus {
-            border-color: #f85149 !important;
-            box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.12) !important;
-        }
 
-        /* Toast */
         .toast {
             position: fixed;
             top: 20px;
@@ -845,7 +770,6 @@
         .toast.error { background: #c62828; }
         .toast.info { background: #1a3a6b; }
 
-        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -881,73 +805,28 @@
         }
 
         @media (max-width: 1200px) {
-            .ad-edit-form {
-                grid-template-columns: 1fr 1fr;
-            }
+            .ad-edit-form { grid-template-columns: 1fr 1fr; }
         }
-
         @media (max-width: 992px) {
             .filters-section { gap: 4px 8px; padding: 8px 12px; }
             .filter-group select { min-width: 60px; max-width: 100px; font-size: 10px; }
             .filter-group label { font-size: 9px; }
             .fab-container { margin-left: auto; }
             .fab-btn { width: 32px; height: 32px; font-size: 16px; }
-            .modal-overlay .modal-box { width: 98%; max-width: 98%; }
-            .ad-edit-form { gap: 10px 16px; }
-            .modal-overlay .modal-body { padding: 18px 20px; }
         }
-
         @media (max-width: 768px) {
             .header-row1 { flex-direction: column; align-items: center; }
             .header-stats { justify-content: center; }
-            .filters-section { 
-                flex-direction: column; 
-                align-items: stretch;
-                padding: 12px;
-            }
+            .filters-section { flex-direction: column; align-items: stretch; padding: 12px; }
             .filter-group { justify-content: flex-start; }
             .filter-group select { max-width: 100%; min-width: 120px; }
-            .fab-container { 
-                margin-left: 0;
-                justify-content: flex-end;
-                margin-top: 4px;
-            }
-            .fab-btn { width: 36px; height: 36px; font-size: 18px; }
+            .fab-container { margin-left: 0; justify-content: flex-end; margin-top: 4px; }
             .ads-grid { grid-template-columns: 1fr; }
             .card-header { flex-direction: column; align-items: stretch; text-align: center; }
             .card-header .badge-group { justify-content: center; }
             .card-actions { justify-content: center; }
             .card-body .row .col { min-width: 100%; }
-            #loginOverlay .login-box { padding: 30px 25px; margin: 15px; }
-            .modal-overlay .modal-box { margin: 10px; max-height: 95vh; width: 98%; }
-            .tabs { flex-direction: column; }
-            .tab-btn { text-align: center; border-bottom: 1px solid #30363d; }
-            .filter-divider { display: none; }
-            .ad-edit-form { 
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-            .modal-overlay .modal-body {
-                padding: 14px 16px;
-            }
-            .modal-overlay .modal-header {
-                padding: 12px 16px;
-            }
-            .modal-overlay .modal-header h4 {
-                font-size: 16px;
-            }
-        }
-        @media (max-width: 480px) {
-            .card-body .label { min-width: 50px; font-size: 8.5pt; }
-            .card-body .value { font-size: 9.5pt; }
-            .stats-bar .stat-item { font-size: 11px; }
-            .stats-bar .stat-item strong { font-size: 12px; }
-            .modal-overlay .modal-footer { flex-direction: column; gap: 8px; }
-            .modal-overlay .modal-footer .btn { width: 100%; text-align: center; }
-            .modal-overlay .modal-header h4 { font-size: 14px; }
-            .ad-edit-form .form-group label { font-size: 11px; }
-            .ad-edit-form .form-group input { font-size: 12px; padding: 6px 10px; }
-            .modal-overlay .modal-box { max-height: 98vh; }
+            .ad-edit-form { grid-template-columns: 1fr; gap: 10px; }
         }
     </style>
 </head>
@@ -962,8 +841,8 @@
             <p class="sub">Lokmat · Advertisement Management</p>
         </div>
         <div class="form-group">
-            <label>Username</label>
-            <input type="text" id="loginUsername" placeholder="Enter your username" autocomplete="username">
+            <label>Email</label>
+            <input type="email" id="loginEmail" placeholder="Enter your email" autocomplete="username">
         </div>
         <div class="form-group">
             <label>Password</label>
@@ -972,7 +851,7 @@
         <button class="login-btn" id="loginBtn" onclick="handleLogin()">
             <i class="fa fa-sign-in"></i> Sign In
         </button>
-        <div class="login-error" id="loginError">Invalid username or password. Please try again.</div>
+        <div class="login-error" id="loginError">Invalid email or password. Please try again.</div>
     </div>
 </div>
 
@@ -1110,7 +989,6 @@
                 </select>
             </div>
             
-            <!-- FAB Button -->
             <div class="fab-container">
                 <button class="fab-btn" onclick="openAddModal()" title="Add New Advertisement">
                     <i class="fa fa-plus"></i>
@@ -1166,7 +1044,7 @@
 // ============================================================
 // CONFIGURATION
 // ============================================================
-const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbxiJJCaHdVOfNLWnzP4FtyK68PKxDKpkkgV3A-zG2bXQ1m0CkU6heg7O3v-yAG9p8lJ/exec';
+const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbyhuTSYRS_ro7CztWO8nk94T0YpYdfjBRYeVhvDxFYJad2H1xiiF8K3KI2QYwt4-VVFUA/exec';
 
 // ============================================================
 // GLOBAL STATE
@@ -1189,13 +1067,6 @@ const PAGE_OPTIONS = Array.from({length: 12}, (_, i) => 'Page-' + String(i + 1).
 const BOOLEAN_OPTIONS = ['Yes', 'No'];
 
 // ============================================================
-// HELPER: Delay function - CRITICAL FIX
-// ============================================================
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// ============================================================
 // API CALL
 // ============================================================
 function callAPI(action, params) {
@@ -1204,6 +1075,8 @@ function callAPI(action, params) {
         if (params) {
             url += '&params=' + encodeURIComponent(JSON.stringify(params));
         }
+        
+        console.log('API Call:', action, params);
         
         fetch(url, {
             method: 'GET',
@@ -1218,9 +1091,12 @@ function callAPI(action, params) {
             return response.json();
         })
         .then(data => {
+            console.log('API Response:', data);
             resolve(data);
         })
         .catch(fetchError => {
+            console.log('Fetch failed, trying JSONP...', fetchError);
+            
             const callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             
             const timeoutId = setTimeout(() => {
@@ -1228,11 +1104,12 @@ function callAPI(action, params) {
                     delete window[callbackName];
                     reject(new Error('Request timeout'));
                 }
-            }, 10000);
+            }, 15000);
             
             window[callbackName] = function(data) {
                 clearTimeout(timeoutId);
                 delete window[callbackName];
+                console.log('JSONP Response:', data);
                 resolve(data);
             };
             
@@ -1249,24 +1126,24 @@ function callAPI(action, params) {
                 if (script.parentNode) {
                     script.parentNode.removeChild(script);
                 }
-            }, 11000);
+            }, 16000);
         });
     });
 }
 
 // ============================================================
-// LOGIN SYSTEM - FIXED with delay
+// LOGIN SYSTEM - FIXED
 // ============================================================
 async function handleLogin() {
-    const username = document.getElementById('loginUsername').value.trim();
+    const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
     const errorEl = document.getElementById('loginError');
     const loginBtn = document.getElementById('loginBtn');
     
     errorEl.classList.remove('show');
     
-    if (!username || !password) {
-        errorEl.textContent = 'Please enter both username and password.';
+    if (!email || !password) {
+        errorEl.textContent = 'Please enter both email and password.';
         errorEl.classList.add('show');
         return;
     }
@@ -1275,14 +1152,17 @@ async function handleLogin() {
     loginBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Authenticating...';
     
     try {
-        // STEP 1: Authenticate
+        // Send email as username
         const result = await callAPI('authenticateUser', { 
-            username: username, 
+            username: email, 
             password: password 
         });
         
         if (result.success && result.user) {
             loggedInUser = result.user;
+            
+            // Store in session
+            sessionStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
             
             document.getElementById('loginOverlay').style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
@@ -1291,40 +1171,54 @@ async function handleLogin() {
             
             showToast('Welcome, ' + (result.user.name || 'User') + '!', 'success');
             
-            // STEP 2: CRITICAL - Wait for Google Sheets to write the Status
-            // This is the main fix - give time for the sheet write to complete
-            showToast('Loading dashboard...', 'info');
-            await delay(1500); // Wait 1.5 seconds
-            
-            // STEP 3: Load dashboard data
             await loadDashboardData();
         } else {
-            errorEl.textContent = result.message || 'Invalid username or password. Please try again.';
+            errorEl.textContent = result.message || 'Invalid email or password. Please try again.';
             errorEl.classList.add('show');
             loginBtn.disabled = false;
             loginBtn.innerHTML = '<i class="fa fa-sign-in"></i> Sign In';
         }
     } catch(err) {
+        console.error('Login error:', err);
         errorEl.textContent = 'Error connecting to server. Please try again.';
         errorEl.classList.add('show');
         loginBtn.disabled = false;
         loginBtn.innerHTML = '<i class="fa fa-sign-in"></i> Sign In';
-        console.error('Login error:', err);
     }
 }
 
 // ============================================================
-// LOGOUT
+// CHECK SESSION ON LOAD
 // ============================================================
+function checkSession() {
+    const savedUser = sessionStorage.getItem('loggedInUser');
+    if (savedUser) {
+        try {
+            const user = JSON.parse(savedUser);
+            loggedInUser = user;
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('headerUserName').textContent = user.name || user.username;
+            document.getElementById('headerUserRole').textContent = user.role || 'User';
+            loadDashboardData();
+            return true;
+        } catch(e) {
+            sessionStorage.removeItem('loggedInUser');
+        }
+    }
+    return false;
+}
+
 function logout() {
     if (loggedInUser && loggedInUser.username) {
         callAPI('logoutUser', { username: loggedInUser.username }).catch(() => {});
     }
     loggedInUser = null;
+    sessionStorage.removeItem('loggedInUser');
     dashboardDataLoaded = false;
     document.getElementById('mainContent').style.display = 'none';
     document.getElementById('loginOverlay').style.display = 'flex';
-    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginEmail').value = '';
     document.getElementById('loginPassword').value = '';
     document.getElementById('loginError').classList.remove('show');
     document.getElementById('loginBtn').disabled = false;
@@ -1332,44 +1226,18 @@ function logout() {
     showToast('Logged out successfully', 'info');
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('loginPassword').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') handleLogin();
-    });
-    document.getElementById('loginUsername').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') document.getElementById('loginPassword').focus();
-    });
-    document.getElementById('loginUsername').focus();
-});
-
 // ============================================================
-// TAB SWITCHING
+// LOAD DASHBOARD DATA
 // ============================================================
-function switchTab(tabName) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-    
-    if (tabName === 'ads') {
-        document.querySelector('.tab-btn.active')?.classList.remove('active');
-        document.querySelectorAll('.tab-btn')[0].classList.add('active');
-        document.getElementById('tab-ads').classList.add('active');
-    }
-}
-
-// ============================================================
-// LOAD DASHBOARD DATA - With retry
-// ============================================================
-async function loadDashboardData(retryCount = 0) {
+async function loadDashboardData() {
     try {
-        showLoading('Loading dashboard data...');
+        showToast('Loading data...', 'info');
         
         const result = await callAPI('getDashboardData', { 
             username: loggedInUser.username,
             role: loggedInUser.role,
             name: loggedInUser.name
         });
-        
-        hideLoading();
         
         if (result.success) {
             allAds = result.ads || [];
@@ -1389,26 +1257,11 @@ async function loadDashboardData(retryCount = 0) {
             dashboardDataLoaded = true;
             showToast('Dashboard loaded successfully!', 'success');
         } else {
-            // If session expired, retry after delay
-            if (result.error && result.error.includes('Session expired') && retryCount < 3) {
-                hideLoading();
-                showToast('Retrying... (Attempt ' + (retryCount + 1) + '/3)', 'info');
-                await delay(1000);
-                await loadDashboardData(retryCount + 1);
-                return;
-            }
             showError('Failed to load dashboard data: ' + (result.error || 'Unknown error'));
         }
     } catch(error) {
-        hideLoading();
         console.error('Error loading dashboard:', error);
-        if (retryCount < 3) {
-            showToast('Retrying... (Attempt ' + (retryCount + 1) + '/3)', 'info');
-            await delay(1000);
-            await loadDashboardData(retryCount + 1);
-        } else {
-            showError('Error loading dashboard: ' + error.message);
-        }
+        showError('Error loading dashboard: ' + error.message);
     }
 }
 
@@ -1568,13 +1421,11 @@ function buildAdCard(ad, index) {
     const rowIndex = allAds.indexOf(ad);
     const deskColor = ad.Desk ? getColorFromString(ad.Desk) : '#30363d';
     
-    // Format date for display (DD/MM/YYYY)
     const toDTPValue = ad['To-DTP'] || '—';
     const formattedDate = toDTPValue !== '—' && toDTPValue.length === 8 ? 
         toDTPValue.substring(0, 2) + '/' + toDTPValue.substring(2, 4) + '/' + toDTPValue.substring(4, 8) : 
         toDTPValue;
     
-    // Format boolean values
     const formatBoolean = (val) => {
         if (!val) return '—';
         const lower = val.toLowerCase();
@@ -1697,7 +1548,7 @@ function buildAdCard(ad, index) {
 }
 
 // ============================================================
-// HELPER: Get Color from String
+// HELPER FUNCTIONS
 // ============================================================
 function getColorFromString(str) {
     const colors = ['#1a3a6b', '#6f42c1', '#c0392b', '#2a9922', '#c79306', '#2245f2', '#8e44ad', '#2980b9'];
@@ -1708,30 +1559,22 @@ function getColorFromString(str) {
     return colors[Math.abs(hash) % colors.length];
 }
 
-// ============================================================
-// DATE VALIDATION - DDMMYYYY
-// ============================================================
 function validateDateDDMMYYYY(dateStr) {
     if (!dateStr || dateStr.trim() === '') return { valid: true };
-    
     const cleaned = dateStr.trim();
     if (!/^\d{8}$/.test(cleaned)) {
         return { valid: false, message: 'Date must be DDMMYYYY (8 digits)' };
     }
-    
     const day = parseInt(cleaned.substring(0, 2));
     const month = parseInt(cleaned.substring(2, 4));
     const year = parseInt(cleaned.substring(4, 8));
-    
     const date = new Date(year, month - 1, day);
     if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
         return { valid: false, message: 'Invalid date' };
     }
-    
     if (year < 1900 || year > 2100) {
         return { valid: false, message: 'Year must be between 1900-2100' };
     }
-    
     return { valid: true };
 }
 
@@ -1742,6 +1585,47 @@ function formatDateForDisplay(dateStr) {
         return cleaned.substring(0, 2) + '/' + cleaned.substring(2, 4) + '/' + cleaned.substring(4, 8);
     }
     return cleaned;
+}
+
+function validateDateInput(input) {
+    const fieldId = input.id;
+    const errorId = 'dateError_' + fieldId.replace('edit_', '');
+    const errorEl = document.getElementById(errorId);
+    if (!errorEl) return;
+    const value = input.value.trim();
+    if (value === '') {
+        errorEl.classList.remove('show');
+        input.classList.remove('date-error-input');
+        return;
+    }
+    const cleaned = value.replace(/\//g, '');
+    if (cleaned.length <= 8 && /^\d*$/.test(cleaned)) {
+        let formatted = '';
+        for (let i = 0; i < cleaned.length; i++) {
+            if (i === 2 || i === 4) formatted += '/';
+            formatted += cleaned[i];
+        }
+        if (formatted !== value) input.value = formatted;
+    }
+    const rawValue = input.value.replace(/\//g, '');
+    if (rawValue.length === 8) {
+        const validation = validateDateDDMMYYYY(rawValue);
+        if (validation.valid) {
+            errorEl.classList.remove('show');
+            input.classList.remove('date-error-input');
+        } else {
+            errorEl.textContent = validation.message || 'Invalid date format';
+            errorEl.classList.add('show');
+            input.classList.add('date-error-input');
+        }
+    } else if (rawValue.length > 0 && rawValue.length < 8) {
+        errorEl.textContent = 'Enter all 8 digits (DDMMYYYY)';
+        errorEl.classList.add('show');
+        input.classList.add('date-error-input');
+    } else {
+        errorEl.classList.remove('show');
+        input.classList.remove('date-error-input');
+    }
 }
 
 // ============================================================
@@ -1978,59 +1862,6 @@ function renderEditForm(ad) {
 }
 
 // ============================================================
-// DATE VALIDATION FUNCTION
-// ============================================================
-function validateDateInput(input) {
-    const fieldId = input.id;
-    const errorId = 'dateError_' + fieldId.replace('edit_', '');
-    const errorEl = document.getElementById(errorId);
-    
-    if (!errorEl) return;
-    
-    const value = input.value.trim();
-    
-    if (value === '') {
-        errorEl.classList.remove('show');
-        input.classList.remove('date-error-input');
-        return;
-    }
-    
-    const cleaned = value.replace(/\//g, '');
-    if (cleaned.length <= 8 && /^\d*$/.test(cleaned)) {
-        let formatted = '';
-        for (let i = 0; i < cleaned.length; i++) {
-            if (i === 2 || i === 4) {
-                formatted += '/';
-            }
-            formatted += cleaned[i];
-        }
-        if (formatted !== value) {
-            input.value = formatted;
-        }
-    }
-    
-    const rawValue = input.value.replace(/\//g, '');
-    if (rawValue.length === 8) {
-        const validation = validateDateDDMMYYYY(rawValue);
-        if (validation.valid) {
-            errorEl.classList.remove('show');
-            input.classList.remove('date-error-input');
-        } else {
-            errorEl.textContent = validation.message || 'Invalid date format';
-            errorEl.classList.add('show');
-            input.classList.add('date-error-input');
-        }
-    } else if (rawValue.length > 0 && rawValue.length < 8) {
-        errorEl.textContent = 'Enter all 8 digits (DDMMYYYY)';
-        errorEl.classList.add('show');
-        input.classList.add('date-error-input');
-    } else {
-        errorEl.classList.remove('show');
-        input.classList.remove('date-error-input');
-    }
-}
-
-// ============================================================
 // SAVE AD DATA
 // ============================================================
 async function saveAdData() {
@@ -2143,15 +1974,11 @@ function closeEditModal() {
 // MODAL CLOSE HANDLERS
 // ============================================================
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeEditModal();
-    }
+    if (e.key === 'Escape') closeEditModal();
 });
 
 document.getElementById('editAdModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeEditModal();
-    }
+    if (e.target === this) closeEditModal();
 });
 
 // ============================================================
@@ -2161,16 +1988,12 @@ function showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
     toast.textContent = message;
     toast.className = 'toast ' + type + ' show';
-    
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(() => {
         toast.classList.remove('show');
     }, 3000);
 }
 
-// ============================================================
-// LOADING OVERLAY
-// ============================================================
 function showLoading(message = 'Processing...') {
     const overlay = document.getElementById('loadingOverlay');
     document.getElementById('loadingMessage').textContent = message;
@@ -2181,9 +2004,6 @@ function hideLoading() {
     document.getElementById('loadingOverlay').classList.remove('show');
 }
 
-// ============================================================
-// HELPER FUNCTIONS
-// ============================================================
 function escapeHtml(str) {
     if (!str) return '';
     const div = document.createElement('div');
@@ -2202,11 +2022,31 @@ function showError(message) {
     `;
 }
 
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    if (tabName === 'ads') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('tab-ads').classList.add('active');
+    }
+}
+
 // ============================================================
 // INITIALIZE
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Application initialized
+    // Try to restore session
+    if (!checkSession()) {
+        document.getElementById('loginOverlay').style.display = 'flex';
+    }
+    
+    document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') handleLogin();
+    });
+    document.getElementById('loginEmail').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') document.getElementById('loginPassword').focus();
+    });
 });
 </script>
 
