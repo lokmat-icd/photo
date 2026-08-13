@@ -1,0 +1,2986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lokmat - Advertisement Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: #0d1117;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e6edf3;
+            min-height: 100vh;
+        }
+        
+        .container-fluid {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #161b22; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #58a6ff; }
+
+        /* LOGIN OVERLAY */
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #loginOverlay .login-box {
+            background: #161b22;
+            padding: 45px 50px 50px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+            max-width: 420px;
+            width: 100%;
+            border: 1px solid #30363d;
+        }
+        
+        #loginOverlay .login-box .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        #loginOverlay .login-box .logo img {
+            width: 60%;
+            height: auto;
+            max-height: 80px;
+            object-fit: contain;
+            border-radius: 12px;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        #loginOverlay .login-box .logo h3 {
+            color: #58a6ff;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 20px;
+        }
+        
+        #loginOverlay .login-box .logo p.sub {
+            color: #8b949e;
+            font-size: 13px;
+            margin: 0;
+        }
+        
+        #loginOverlay .login-box .form-group {
+            margin-bottom: 18px;
+        }
+        
+        #loginOverlay .login-box .form-group label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #8b949e;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        #loginOverlay .login-box .form-group input {
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            color: #e6edf3;
+            padding: 10px 14px;
+            font-size: 14px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        #loginOverlay .login-box .form-group input:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+        }
+        
+        #loginOverlay .login-box .form-group input::placeholder {
+            color: #484f58;
+        }
+        
+        #loginOverlay .login-box .login-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #238636;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 5px;
+        }
+        
+        #loginOverlay .login-box .login-btn:hover {
+            background: #2ea043;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(35, 134, 54, 0.4);
+        }
+        
+        #loginOverlay .login-box .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #loginOverlay .login-box .login-error {
+            color: #f85149;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
+        }
+        
+        #loginOverlay .login-box .login-error.show {
+            display: block;
+        }
+
+        /* HEADER */
+        .header {
+            background: #161b22;
+            color: #e6edf3;
+            padding: 12px 22px;
+            border-radius: 12px;
+            margin-bottom: 0;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .header-row1 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 15px;
+            min-height: 48px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .header-logo {
+            width: 150px;
+            height: auto;
+            max-height: 60px;
+            object-fit: contain;
+            display: block;
+            border-radius: 18px;
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 8px 14px;
+            flex-wrap: wrap;
+            flex: 1;
+            justify-content: center;
+        }
+        .header-stats .stat-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255,255,255,0.05);
+            padding: 3px 14px 3px 10px;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.06);
+            color: #e6edf3;
+        }
+        .header-stats .stat-chip .stat-label {
+            opacity: 0.7;
+            font-weight: 400;
+            font-size: 11px;
+            color: #8b949e;
+        }
+        .header-stats .stat-chip .stat-value {
+            font-weight: 700;
+            font-size: 14px;
+            color: #58a6ff;
+        }
+        .header-stats .stat-divider {
+            color: #30363d;
+            font-size: 14px;
+            font-weight: 100;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 12px 4px 16px;
+            border-radius: 30px;
+            flex-shrink: 0;
+            border: 1px solid #30363d;
+        }
+        .header-user .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #e6edf3;
+        }
+        .header-user .user-role {
+            font-size: 10px;
+            opacity: 0.6;
+            color: #8b949e;
+        }
+        .header-user .logout-header-btn {
+            background: rgba(255,255,255,0.06);
+            border: none;
+            color: #8b949e;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .header-user .logout-header-btn:hover {
+            background: rgba(255,255,255,0.12);
+            color: #e6edf3;
+        }
+
+        /* TABS */
+        .tabs-container {
+            background: #161b22;
+            border-radius: 10px 10px 0 0;
+            border: 1px solid #30363d;
+            border-bottom: none;
+            overflow: hidden;
+            margin-top: 0;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #30363d;
+            background: #0d1117;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 12px 28px;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 600;
+            color: #8b949e;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn:hover {
+            color: #58a6ff;
+            background: rgba(88, 166, 255, 0.06);
+        }
+        .tab-btn.active {
+            color: #58a6ff;
+            border-bottom-color: #58a6ff;
+            background: #161b22;
+        }
+        .tab-btn i {
+            margin-right: 8px;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* FILTERS */
+        .filters-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 10px;
+            padding: 10px 16px;
+            background: #0d1117;
+            border-radius: 10px;
+            border: 1px solid #30363d;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            flex-wrap: wrap;
+        }
+        .filter-group label {
+            font-weight: 600;
+            font-size: 10px;
+            color: #8b949e;
+            margin: 0;
+            white-space: nowrap;
+        }
+        .filter-group select {
+            padding: 3px 6px;
+            border-radius: 4px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            color: #e6edf3;
+            font-size: 11px;
+            min-width: 80px;
+            max-width: 130px;
+            height: 28px;
+        }
+        .filter-group select:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+        }
+        .filter-group select option {
+            background: #161b22;
+            color: #e6edf3;
+        }
+        .filter-divider {
+            color: #30363d;
+            font-size: 14px;
+            font-weight: 100;
+            padding: 0 2px;
+        }
+
+        .fab-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+        }
+        .fab-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #238636;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(35, 134, 54, 0.4);
+        }
+        .fab-btn:hover {
+            background: #2ea043;
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 6px 25px rgba(35, 134, 54, 0.6);
+        }
+        .fab-btn:active {
+            transform: scale(0.95);
+        }
+
+        .stats-bar {
+            background: #0d1117;
+            border-radius: 10px;
+            border: 1px solid #30363d;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .stats-bar .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 8px 18px;
+            gap: 6px 16px;
+        }
+        .stats-bar .stats-row.stats-main {
+            background: #0d1117;
+            border-bottom: 1px solid #30363d;
+        }
+        .stats-bar .stat-item {
+            font-size: 13px;
+            color: #8b949e;
+            white-space: nowrap;
+        }
+        .stats-bar .stat-item strong {
+            color: #58a6ff;
+            font-size: 15px;
+        }
+        .stats-bar .stat-divider {
+            color: #30363d;
+            font-size: 16px;
+            font-weight: 100;
+        }
+
+        /* ADS GRID */
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 16px;
+            padding: 0;
+        }
+
+        .ad-card {
+            background: #161b22;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #30363d;
+            display: flex;
+            flex-direction: column;
+            border-left-width: 5px;
+        }
+        .ad-card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            transform: translateY(-3px);
+            border-color: #58a6ff;
+        }
+
+        .card-header {
+            padding: 10px 14px 8px;
+            border-bottom: 1px solid #30363d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            background: #0d1117;
+        }
+        .card-header .file-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #58a6ff;
+        }
+        .card-header .badge-group {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .card-header .desk-badge {
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            background: #1a3a6b;
+            color: white;
+        }
+        .card-header .icd-badge {
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            background: #c79306;
+            color: white;
+        }
+
+        .card-body {
+            padding: 8px 14px 10px;
+            flex: 1;
+        }
+        .card-body .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 1px;
+            line-height: 1.4;
+        }
+        .card-body .row .col {
+            display: flex;
+            align-items: baseline;
+            flex: 1;
+            min-width: 45%;
+            padding: 1px 4px 1px 0;
+        }
+        .card-body .label {
+            font-size: 9.5pt;
+            font-weight: 600;
+            color: #8b949e;
+            min-width: 60px;
+            flex-shrink: 0;
+            text-align: left;
+        }
+        .card-body .value {
+            font-size: 9.2pt;
+            color: #e6edf3;
+            word-break: break-word;
+            text-align: left;
+        }
+        .card-body .value.highlight {
+            color: #58a6ff;
+            font-weight: 600;
+        }
+        .card-body .value.boolean-yes {
+            color: #3fb950;
+        }
+        .card-body .value.boolean-no {
+            color: #f85149;
+        }
+
+        .card-actions {
+            padding: 8px 14px 10px;
+            border-top: 1px solid #30363d;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            background: #0d1117;
+        }
+        .card-actions .btn-action {
+            padding: 4px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .card-actions .btn-edit {
+            background: #238636;
+            color: white;
+        }
+        .card-actions .btn-edit:hover {
+            background: #2ea043;
+            transform: scale(1.02);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8b949e;
+            background: #161b22;
+            border-radius: 12px;
+            grid-column: 1 / -1;
+            border: 1px solid #30363d;
+        }
+        .no-results i { font-size: 36px; opacity: 0.3; display: block; margin-bottom: 12px; }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 50px 20px;
+            color: #8b949e;
+            grid-column: 1 / -1;
+        }
+        .loading-spinner i { font-size: 28px; margin-bottom: 10px; display: block; color: #58a6ff; }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-overlay .modal-box {
+            background: #161b22;
+            border-radius: 12px;
+            max-width: 1100px;
+            width: 95%;
+            max-height: 92vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            animation: modalSlideIn 0.3s ease;
+            border: 1px solid #30363d;
+        }
+        @keyframes modalSlideIn {
+            from { transform: translateY(-30px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .modal-overlay .modal-header {
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #0d1117 0%, #1a3a6b 100%);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            border-bottom: 1px solid #30363d;
+        }
+        .modal-overlay .modal-header h4 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 18px;
+            color: #58a6ff;
+        }
+        .modal-overlay .modal-header h4 i {
+            margin-right: 10px;
+        }
+        .modal-overlay .modal-header .close-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid #30363d;
+            color: #8b949e;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay .modal-header .close-btn:hover {
+            background: rgba(255,255,255,0.15);
+            color: #e6edf3;
+            transform: rotate(90deg);
+            border-color: #58a6ff;
+        }
+        .modal-overlay .modal-body {
+            padding: 24px 28px;
+            color: #e6edf3;
+            background: #0d1117;
+        }
+        .modal-overlay .modal-footer {
+            padding: 12px 24px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid #30363d;
+            background: #0d1117;
+            border-radius: 0 0 12px 12px;
+        }
+        .modal-overlay .modal-footer .btn {
+            padding: 8px 28px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        .modal-overlay .modal-footer .btn-cancel {
+            background: #21262d;
+            color: #8b949e;
+        }
+        .modal-overlay .modal-footer .btn-cancel:hover {
+            background: #30363d;
+            color: #e6edf3;
+        }
+        .modal-overlay .modal-footer .btn-save {
+            background: #238636;
+            color: white;
+        }
+        .modal-overlay .modal-footer .btn-save:hover {
+            background: #2ea043;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(35, 134, 54, 0.3);
+        }
+        .modal-overlay .modal-footer .btn-save:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* FORM OVERRIDES */
+        .modal-overlay input,
+        .modal-overlay select,
+        .modal-overlay textarea,
+        .modal-overlay .form-control {
+            background: #0d1117 !important;
+            color: #e6edf3 !important;
+            border: 1px solid #30363d !important;
+            border-radius: 6px !important;
+            padding: 8px 12px !important;
+            font-size: 13px !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+            box-shadow: none !important;
+            transition: all 0.3s ease !important;
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .modal-overlay input:focus,
+        .modal-overlay select:focus,
+        .modal-overlay textarea:focus,
+        .modal-overlay .form-control:focus {
+            border-color: #58a6ff !important;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15) !important;
+            background: #0d1117 !important;
+            color: #e6edf3 !important;
+            outline: none !important;
+        }
+
+        .modal-overlay input:disabled,
+        .modal-overlay select:disabled,
+        .modal-overlay textarea:disabled,
+        .modal-overlay .form-control:disabled {
+            background: #161b22 !important;
+            color: #484f58 !important;
+            cursor: not-allowed !important;
+            opacity: 0.7 !important;
+        }
+
+        .modal-overlay input::placeholder,
+        .modal-overlay select::placeholder,
+        .modal-overlay textarea::placeholder,
+        .modal-overlay .form-control::placeholder {
+            color: #484f58 !important;
+        }
+
+        .modal-overlay .calculated-field {
+            background: #161b22 !important;
+            color: #58a6ff !important;
+            font-weight: 600 !important;
+            cursor: default !important;
+        }
+
+        /* Flatpickr Dark Theme */
+        .flatpickr-calendar {
+            background: #161b22 !important;
+            border: 1px solid #30363d !important;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8) !important;
+        }
+        .flatpickr-calendar .flatpickr-months {
+            background: #0d1117 !important;
+            border-bottom: 1px solid #30363d !important;
+        }
+        .flatpickr-calendar .flatpickr-months .flatpickr-month {
+            color: #e6edf3 !important;
+        }
+        .flatpickr-calendar .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-calendar .flatpickr-months .flatpickr-next-month {
+            color: #8b949e !important;
+        }
+        .flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover,
+        .flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover {
+            color: #58a6ff !important;
+        }
+        .flatpickr-calendar .flatpickr-weekdays {
+            background: #0d1117 !important;
+        }
+        .flatpickr-calendar .flatpickr-weekday {
+            color: #8b949e !important;
+        }
+        .flatpickr-calendar .flatpickr-day {
+            color: #e6edf3 !important;
+            border-color: #30363d !important;
+        }
+        .flatpickr-calendar .flatpickr-day:hover {
+            background: #30363d !important;
+            border-color: #58a6ff !important;
+        }
+        .flatpickr-calendar .flatpickr-day.selected {
+            background: #238636 !important;
+            border-color: #238636 !important;
+        }
+        .flatpickr-calendar .flatpickr-day.today {
+            border-color: #58a6ff !important;
+        }
+
+        /* EDIT FORM */
+        .ad-edit-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px 20px;
+        }
+        .ad-edit-form .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .ad-edit-form .form-group label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #8b949e;
+            letter-spacing: 0.3px;
+            margin-bottom: 1px;
+        }
+        .ad-edit-form .form-group label .required-star {
+            color: #f85149;
+            margin-left: 2px;
+        }
+        .ad-edit-form .form-group .field-hint {
+            font-size: 10px;
+            color: #484f58;
+            margin-top: 2px;
+            font-style: italic;
+        }
+        .ad-edit-form .form-group .field-hint i {
+            margin-right: 4px;
+            color: #8b949e;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 99999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transform: translateX(120%);
+            transition: transform 0.4s ease;
+            max-width: 400px;
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+        .toast.success { background: #238636; }
+        .toast.error { background: #c62828; }
+        .toast.info { background: #1a3a6b; }
+
+        /* LOADING OVERLAY */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 99998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .loading-overlay.show {
+            display: flex;
+        }
+        .loading-overlay .loading-spinner-large {
+            background: #161b22;
+            padding: 30px 40px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            text-align: center;
+        }
+        .loading-overlay .loading-spinner-large i {
+            font-size: 36px;
+            color: #58a6ff;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .loading-overlay .loading-spinner-large p {
+            color: #8b949e;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .agency-add-new {
+            color: #58a6ff !important;
+            font-weight: 600 !important;
+            background: #0d1117 !important;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .ad-edit-form {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .filters-section { gap: 4px 8px; padding: 8px 12px; }
+            .filter-group select { min-width: 60px; max-width: 100px; font-size: 10px; }
+            .filter-group label { font-size: 9px; }
+            .fab-container { margin-left: auto; }
+            .fab-btn { width: 32px; height: 32px; font-size: 16px; }
+            .modal-overlay .modal-box { width: 98%; max-width: 98%; }
+            .ad-edit-form { gap: 10px 16px; }
+            .modal-overlay .modal-body { padding: 18px 20px; }
+        }
+
+        @media (max-width: 768px) {
+            .header-row1 { flex-direction: column; align-items: center; }
+            .header-stats { justify-content: center; }
+            .filters-section { 
+                flex-direction: column; 
+                align-items: stretch;
+                padding: 12px;
+            }
+            .filter-group { justify-content: flex-start; }
+            .filter-group select { max-width: 100%; min-width: 120px; }
+            .fab-container { 
+                margin-left: 0;
+                justify-content: flex-end;
+                margin-top: 4px;
+            }
+            .fab-btn { width: 36px; height: 36px; font-size: 18px; }
+            .ads-grid { grid-template-columns: 1fr; }
+            .card-header { flex-direction: column; align-items: stretch; text-align: center; }
+            .card-header .badge-group { justify-content: center; }
+            .card-actions { justify-content: center; }
+            .card-body .row .col { min-width: 100%; }
+            #loginOverlay .login-box { padding: 30px 25px; margin: 15px; }
+            .modal-overlay .modal-box { margin: 10px; max-height: 95vh; width: 98%; }
+            .tabs { flex-direction: column; }
+            .tab-btn { text-align: center; border-bottom: 1px solid #30363d; }
+            .filter-divider { display: none; }
+            .ad-edit-form { 
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .modal-overlay .modal-body {
+                padding: 14px 16px;
+            }
+            .modal-overlay .modal-header {
+                padding: 12px 16px;
+            }
+            .modal-overlay .modal-header h4 {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-body .label { min-width: 50px; font-size: 8.5pt; }
+            .card-body .value { font-size: 9.5pt; }
+            .stats-bar .stat-item { font-size: 11px; }
+            .stats-bar .stat-item strong { font-size: 12px; }
+            .modal-overlay .modal-footer { flex-direction: column; gap: 8px; }
+            .modal-overlay .modal-footer .btn { width: 100%; text-align: center; }
+            .modal-overlay .modal-header h4 { font-size: 14px; }
+            .ad-edit-form .form-group label { font-size: 11px; }
+            .ad-edit-form .form-group input { font-size: 12px; padding: 6px 10px; }
+            .modal-overlay .modal-box { max-height: 98vh; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay">
+    <div class="login-box">
+        <div class="logo">
+            <img src="https://lh3.googleusercontent.com/d/15dKd_n6e4B4sKUVGkmxPlsJ5LUhAZLgM" alt="LOKMAT">
+            <h3>Advertisement Dashboard</h3>
+            <p class="sub">Lokmat · Advertisement Management</p>
+        </div>
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="loginUsername" placeholder="Enter your username" autocomplete="username">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password">
+        </div>
+        <button class="login-btn" id="loginBtn" onclick="handleLogin()">
+            <i class="fa fa-sign-in"></i> Sign In
+        </button>
+        <div class="login-error" id="loginError">Invalid username or password. Please try again.</div>
+    </div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner-large">
+        <i class="fa fa-spinner fa-spin"></i>
+        <p id="loadingMessage">Processing...</p>
+    </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast" id="toast"></div>
+
+<!-- MAIN CONTENT -->
+<div class="container-fluid" id="mainContent" style="display:none;">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-row1">
+            <div class="header-left">
+                <img src="https://lh3.googleusercontent.com/d/15dKd_n6e4B4sKUVGkmxPlsJ5LUhAZLgM" 
+                     alt="LOKMAT" class="header-logo" 
+                     onerror="this.style.display='none'">
+            </div>
+            
+            <div class="header-stats" id="headerStats">
+                <!-- Dynamically populated -->
+            </div>
+            
+            <div class="header-user">
+                <div>
+                    <div class="user-name" id="headerUserName">User</div>
+                    <div class="user-role" id="headerUserRole">Role</div>
+                </div>
+                <button class="logout-header-btn" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('all')">
+                <i class="fa fa-table"></i> All
+            </button>
+            <button class="tab-btn" onclick="switchTab('gram')">
+                <i class="fa fa-table"></i> Gram
+            </button>
+            <button class="tab-btn" onclick="switchTab('old-all')">
+                <i class="fa fa-archive"></i> OLD-ALL
+            </button>
+            <button class="tab-btn" onclick="switchTab('old-gramin')">
+                <i class="fa fa-archive"></i> OLD-GRAMIN
+            </button>
+        </div>
+    </div>
+
+    <!-- ALL TAB -->
+    <div class="tab-content active" id="tab-all">
+        <div class="filters-section" id="filtersSection-all">
+            <div class="filter-group">
+                <label>Desk</label>
+                <select id="filterDesk-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Agency/Reporter</label>
+                <select id="filterAgency-all" onchange="handleAgencyFilterChange('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Executive</label>
+                <select id="filterExecutive-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Edition</label>
+                <select id="filterEdition-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                    <option value="All">All</option>
+                    <option value="Gram">Gram</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>To-DTP</label>
+                <select id="filterToDTP-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Schedule</label>
+                <select id="filterSchedule-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                    <option value="None">None</option>
+                    <option value="Schedule">Schedule</option>
+                    <option value="Final PDF">Final PDF</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Form</label>
+                <select id="filterForm-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Page</label>
+                <select id="filterPage-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>File</label>
+                <select id="filterFile-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Advt-Remark</label>
+                <select id="filterAdvtRemark-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Location</label>
+                <select id="filterLocation-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Photo</label>
+                <select id="filterPhoto-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>ICD-User</label>
+                <select id="filterICDUser-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>ICD-Remark</label>
+                <select id="filterICDRemark-all" onchange="applyFilters('all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            
+            <div class="fab-container">
+                <button class="fab-btn" onclick="openAddModal('all')" title="Add New Advertisement">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-bar" id="statsBar-all">
+            <div class="stats-row stats-main">
+                <span class="stat-item">📋 <strong id="displayCount-all">0</strong> ads</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">🏢 <strong id="displayDesks-all">0</strong> desks</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">👤 <strong id="displayExecutives-all">0</strong> executives</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">📰 <strong id="displayAgencies-all">0</strong> agencies</span>
+            </div>
+        </div>
+
+        <div class="ads-grid" id="adsGrid-all">
+            <div class="loading-spinner">
+                <i class="fa fa-spinner fa-spin"></i>
+                Loading advertisement data...
+            </div>
+        </div>
+    </div>
+
+    <!-- GRAM TAB -->
+    <div class="tab-content" id="tab-gram">
+        <div class="filters-section" id="filtersSection-gram">
+            <div class="filter-group">
+                <label>Desk</label>
+                <select id="filterDesk-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Agency/Reporter</label>
+                <select id="filterAgency-gram" onchange="handleAgencyFilterChange('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Executive</label>
+                <select id="filterExecutive-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Edition</label>
+                <select id="filterEdition-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                    <option value="All">All</option>
+                    <option value="Gram">Gram</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>To-DTP</label>
+                <select id="filterToDTP-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Schedule</label>
+                <select id="filterSchedule-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                    <option value="None">None</option>
+                    <option value="Schedule">Schedule</option>
+                    <option value="Final PDF">Final PDF</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Form</label>
+                <select id="filterForm-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Page</label>
+                <select id="filterPage-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>File</label>
+                <select id="filterFile-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Advt-Remark</label>
+                <select id="filterAdvtRemark-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Location</label>
+                <select id="filterLocation-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Photo</label>
+                <select id="filterPhoto-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>ICD-User</label>
+                <select id="filterICDUser-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>ICD-Remark</label>
+                <select id="filterICDRemark-gram" onchange="applyFilters('gram')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            
+            <div class="fab-container">
+                <button class="fab-btn" onclick="openAddModal('gram')" title="Add New Advertisement">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-bar" id="statsBar-gram">
+            <div class="stats-row stats-main">
+                <span class="stat-item">📋 <strong id="displayCount-gram">0</strong> ads</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">🏢 <strong id="displayDesks-gram">0</strong> desks</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">👤 <strong id="displayExecutives-gram">0</strong> executives</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">📰 <strong id="displayAgencies-gram">0</strong> agencies</span>
+            </div>
+        </div>
+
+        <div class="ads-grid" id="adsGrid-gram">
+            <div class="loading-spinner">
+                <i class="fa fa-spinner fa-spin"></i>
+                Loading advertisement data...
+            </div>
+        </div>
+    </div>
+
+    <!-- OLD-ALL TAB -->
+    <div class="tab-content" id="tab-old-all">
+        <div class="filters-section" id="filtersSection-old-all">
+            <div class="filter-group">
+                <label>Desk</label>
+                <select id="filterDesk-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Agency/Reporter</label>
+                <select id="filterAgency-old-all" onchange="handleAgencyFilterChange('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Executive</label>
+                <select id="filterExecutive-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Edition</label>
+                <select id="filterEdition-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                    <option value="All">All</option>
+                    <option value="Gram">Gram</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>To-DTP</label>
+                <select id="filterToDTP-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Schedule</label>
+                <select id="filterSchedule-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                    <option value="None">None</option>
+                    <option value="Schedule">Schedule</option>
+                    <option value="Final PDF">Final PDF</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Form</label>
+                <select id="filterForm-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Page</label>
+                <select id="filterPage-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>File</label>
+                <select id="filterFile-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Advt-Remark</label>
+                <select id="filterAdvtRemark-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Location</label>
+                <select id="filterLocation-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Photo</label>
+                <select id="filterPhoto-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>ICD-User</label>
+                <select id="filterICDUser-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>ICD-Remark</label>
+                <select id="filterICDRemark-old-all" onchange="applyFilters('old-all')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            
+            <div class="fab-container">
+                <button class="fab-btn" onclick="openAddModal('old-all')" title="Add New Advertisement">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-bar" id="statsBar-old-all">
+            <div class="stats-row stats-main">
+                <span class="stat-item">📋 <strong id="displayCount-old-all">0</strong> ads</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">🏢 <strong id="displayDesks-old-all">0</strong> desks</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">👤 <strong id="displayExecutives-old-all">0</strong> executives</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">📰 <strong id="displayAgencies-old-all">0</strong> agencies</span>
+            </div>
+        </div>
+
+        <div class="ads-grid" id="adsGrid-old-all">
+            <div class="loading-spinner">
+                <i class="fa fa-spinner fa-spin"></i>
+                Loading advertisement data...
+            </div>
+        </div>
+    </div>
+
+    <!-- OLD-GRAMIN TAB -->
+    <div class="tab-content" id="tab-old-gramin">
+        <div class="filters-section" id="filtersSection-old-gramin">
+            <div class="filter-group">
+                <label>Desk</label>
+                <select id="filterDesk-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Agency/Reporter</label>
+                <select id="filterAgency-old-gramin" onchange="handleAgencyFilterChange('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Executive</label>
+                <select id="filterExecutive-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Edition</label>
+                <select id="filterEdition-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                    <option value="All">All</option>
+                    <option value="Gram">Gram</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>To-DTP</label>
+                <select id="filterToDTP-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Schedule</label>
+                <select id="filterSchedule-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                    <option value="None">None</option>
+                    <option value="Schedule">Schedule</option>
+                    <option value="Final PDF">Final PDF</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Form</label>
+                <select id="filterForm-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Page</label>
+                <select id="filterPage-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>File</label>
+                <select id="filterFile-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Advt-Remark</label>
+                <select id="filterAdvtRemark-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Location</label>
+                <select id="filterLocation-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Photo</label>
+                <select id="filterPhoto-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>ICD-User</label>
+                <select id="filterICDUser-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>ICD-Remark</label>
+                <select id="filterICDRemark-old-gramin" onchange="applyFilters('old-gramin')">
+                    <option value="__ALL__">All</option>
+                </select>
+            </div>
+            
+            <div class="fab-container">
+                <button class="fab-btn" onclick="openAddModal('old-gramin')" title="Add New Advertisement">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-bar" id="statsBar-old-gramin">
+            <div class="stats-row stats-main">
+                <span class="stat-item">📋 <strong id="displayCount-old-gramin">0</strong> ads</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">🏢 <strong id="displayDesks-old-gramin">0</strong> desks</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">👤 <strong id="displayExecutives-old-gramin">0</strong> executives</span>
+                <span class="stat-divider">|</span>
+                <span class="stat-item">📰 <strong id="displayAgencies-old-gramin">0</strong> agencies</span>
+            </div>
+        </div>
+
+        <div class="ads-grid" id="adsGrid-old-gramin">
+            <div class="loading-spinner">
+                <i class="fa fa-spinner fa-spin"></i>
+                Loading advertisement data...
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- EDIT/ADD AD MODAL -->
+<div class="modal-overlay" id="editAdModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h4 id="modalTitle"><i class="fa fa-edit"></i> Edit Advertisement</h4>
+            <button class="close-btn" onclick="closeEditModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="editModalBody">
+            <div class="ad-edit-form" id="adEditForm">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-cancel" onclick="closeEditModal()">Close</button>
+            <button class="btn btn-save" id="saveAdBtn" onclick="saveAdData()">
+                <i class="fa fa-save"></i> Save Changes
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+// ============================================================
+// CONFIGURATION
+// ============================================================
+const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbxzjyU8cmFez6-EMLglxFBlu9puzjUTk1_62JAZ0rnMId2WbRD58zb1c0jTX76HkS8ROQ/exec';
+
+// ============================================================
+// DROPDOWN DATA
+// ============================================================
+const EXECUTIVE_OPTIONS = ['Yuvraj', 'Ketan', 'Kiran', 'Rushikesh', 'Uttam', 'Rohit', 'Sambhaji', 'Milind', 'Avinash', 'Nikhil'];
+const EDITION_OPTIONS = ['All', 'Gram'];
+const ICD_USER_OPTIONS = ['VPY', 'VNH', 'AVT', 'VMD', 'LJT', 'MSV', 'SHP', 'SRO', 'SDN', 'KUM', 'SSW', 'SPN', 'UAB'];
+const SCHEDULE_OPTIONS = ['None', 'Schedule', 'Final PDF'];
+
+// ============================================================
+// EXECUTIVE TO DESK MAPPING
+// ============================================================
+const EXECUTIVE_TO_DESK = {
+    'City': ['Yuvraj', 'Ketan', 'Kiran', 'Rushikesh', 'Uttam', 'Rohit'],
+    'Gram': ['Sambhaji', 'Milind', 'Avinash', 'Nikhil']
+};
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+let allData = {
+    'all': { ads: [], filtered: [], filters: {} },
+    'gram': { ads: [], filtered: [], filters: {} },
+    'old-all': { ads: [], filtered: [], filters: {} },
+    'old-gramin': { ads: [], filtered: [], filters: {} }
+};
+let loggedInUser = null;
+let currentTab = 'all';
+let currentEditRowIndex = -1;
+let isAddMode = false;
+let currentEditSheet = 'all';
+let agencyOptions = [];
+let datePickerInstance = null;
+
+// ============================================================
+// DATE FUNCTIONS
+// ============================================================
+function formatDateForDisplay(dateStr) {
+    if (!dateStr || dateStr.trim() === '') return '';
+    if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+        return dateStr;
+    }
+    if (/^\d{8}$/.test(dateStr)) {
+        return dateStr.substring(0, 2) + '-' + dateStr.substring(2, 4) + '-' + dateStr.substring(4, 8);
+    }
+    return dateStr;
+}
+
+function formatDateForSheet(dateStr) {
+    if (!dateStr || dateStr.trim() === '') return '';
+    if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+        return dateStr;
+    }
+    if (/^\d{8}$/.test(dateStr)) {
+        return dateStr.substring(0, 2) + '-' + dateStr.substring(2, 4) + '-' + dateStr.substring(4, 8);
+    }
+    return dateStr;
+}
+
+function parseDateFromSheet(dateStr) {
+    if (!dateStr || dateStr.trim() === '') return null;
+    if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+        const parts = dateStr.split('-');
+        return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+    }
+    if (/^\d{8}$/.test(dateStr)) {
+        return new Date(
+            parseInt(dateStr.substring(4, 8)),
+            parseInt(dateStr.substring(2, 4)) - 1,
+            parseInt(dateStr.substring(0, 2))
+        );
+    }
+    return null;
+}
+
+// ============================================================
+// CALCULATION FUNCTIONS - UPDATED
+// ============================================================
+
+function calculateSQCM(width, height) {
+    const w = parseInt(width) || 0;
+    const h = parseInt(height) || 0;
+    return w * h;
+}
+
+function calculateBaseAmount(totalWithGST) {
+    // User enters total including GST (105%)
+    // Base amount = (totalWithGST / 105) * 100
+    const t = parseFloat(totalWithGST) || 0;
+    if (t === 0) return 0;
+    // Round to nearest whole number
+    return Math.round((t / 105) * 100);
+}
+
+function calculateGST(baseAmount) {
+    // GST = 5% of base amount
+    const b = parseFloat(baseAmount) || 0;
+    if (b === 0) return 0;
+    // Round to nearest whole number
+    return Math.round(b * 0.05);
+}
+
+function calculateRate(baseAmount, sqcm) {
+    // Rate = Base Amount / SQCM
+    const b = parseFloat(baseAmount) || 0;
+    const s = parseInt(sqcm) || 0;
+    if (s === 0) return 0;
+    // Round to nearest whole number
+    return Math.round(b / s);
+}
+
+function formatRate(num) {
+    // Return as whole number
+    return Math.round(num).toString();
+}
+
+function updateCalculations() {
+    const widthInput = document.getElementById('edit_Size-Width');
+    const heightInput = document.getElementById('edit_Size-Height');
+    const sqcmInput = document.getElementById('edit_SQCM');
+    const totalInput = document.getElementById('edit_Total'); // User enters total with GST
+    const rateInput = document.getElementById('edit_Rate');
+    const gstInput = document.getElementById('edit_GST');
+    
+    if (!widthInput || !heightInput || !sqcmInput || !totalInput || !rateInput || !gstInput) return;
+    
+    const width = parseInt(widthInput.value) || 0;
+    const height = parseInt(heightInput.value) || 0;
+    const totalWithGST = parseFloat(totalInput.value) || 0;
+    
+    // Calculate SQCM
+    const sqcm = calculateSQCM(width, height);
+    sqcmInput.value = sqcm;
+    
+    // Calculate base amount (Y) from total with GST (X) - whole number
+    const baseAmount = calculateBaseAmount(totalWithGST);
+    
+    // Calculate GST (5% of base amount) - whole number
+    const gst = calculateGST(baseAmount);
+    gstInput.value = gst.toString();
+    
+    // Calculate Rate (base amount / SQCM) - whole number
+    const rate = calculateRate(baseAmount, sqcm);
+    rateInput.value = rate.toString();
+}
+
+// ============================================================
+// AUTO-POPULATE DESK BASED ON EXECUTIVE
+// ============================================================
+function autoPopulateDesk(executiveValue) {
+    const deskInput = document.getElementById('edit_Desk');
+    if (!deskInput) return;
+    if (!executiveValue) {
+        deskInput.value = '';
+        return;
+    }
+    let desk = '';
+    for (const [deskName, executives] of Object.entries(EXECUTIVE_TO_DESK)) {
+        if (executives.includes(executiveValue)) {
+            desk = deskName;
+            break;
+        }
+    }
+    deskInput.value = desk;
+}
+
+// ============================================================
+// AGENCY/REPORTER FUNCTIONS
+// ============================================================
+async function loadAgencyOptions() {
+    try {
+        const result = await callAPI('getAgencyOptions', {
+            username: loggedInUser.username
+        });
+        if (result.success) {
+            agencyOptions = result.agencies || [];
+            return agencyOptions;
+        }
+        return [];
+    } catch(error) {
+        console.error('Error loading agency options:', error);
+        return [];
+    }
+}
+
+function populateAgencyDropdown(selectElement, selectedValue) {
+    if (!selectElement) return;
+    
+    const currentValue = selectElement.value;
+    selectElement.innerHTML = '';
+    
+    const allOption = document.createElement('option');
+    allOption.value = '__ALL__';
+    allOption.textContent = 'All';
+    selectElement.appendChild(allOption);
+    
+    agencyOptions.forEach(agency => {
+        const option = document.createElement('option');
+        option.value = agency;
+        option.textContent = agency;
+        if (agency === selectedValue || agency === currentValue) {
+            option.selected = true;
+        }
+        selectElement.appendChild(option);
+    });
+    
+    const addNewOption = document.createElement('option');
+    addNewOption.value = '__ADD_NEW__';
+    addNewOption.textContent = '+ Add New Agency/Reporter';
+    addNewOption.style.color = '#58a6ff';
+    addNewOption.style.fontWeight = 'bold';
+    addNewOption.className = 'agency-add-new';
+    selectElement.appendChild(addNewOption);
+}
+
+function handleAgencyFilterChange(tabName) {
+    const selectId = 'filterAgency-' + tabName;
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    
+    if (select.value === '__ADD_NEW__') {
+        const newAgency = prompt('Enter new Agency/Reporter name:');
+        if (newAgency && newAgency.trim()) {
+            const trimmed = newAgency.trim();
+            if (agencyOptions.includes(trimmed)) {
+                showToast('Agency/Reporter already exists: ' + trimmed, 'error');
+                select.value = trimmed;
+                applyFilters(tabName);
+                return;
+            }
+            saveNewAgency(trimmed);
+        } else {
+            select.value = '__ALL__';
+            applyFilters(tabName);
+        }
+        return;
+    }
+    applyFilters(tabName);
+}
+
+async function saveNewAgency(agencyName) {
+    try {
+        const result = await callAPI('addAgency', {
+            username: loggedInUser.username,
+            agencyName: agencyName
+        });
+        if (result.success) {
+            showToast('✅ Agency/Reporter "' + agencyName + '" added successfully!', 'success');
+            await refreshAgencyFilters();
+            ['all', 'gram', 'old-all', 'old-gramin'].forEach(tabName => {
+                const select = document.getElementById('filterAgency-' + tabName);
+                if (select) {
+                    select.value = agencyName;
+                    applyFilters(tabName);
+                }
+            });
+        } else {
+            showToast('❌ Error adding agency: ' + (result.error || 'Unknown error'), 'error');
+        }
+    } catch(error) {
+        console.error('Error saving agency:', error);
+        showToast('❌ Error adding agency: ' + error.message, 'error');
+    }
+}
+
+async function refreshAgencyFilters() {
+    await loadAgencyOptions();
+    ['all', 'gram', 'old-all', 'old-gramin'].forEach(tabName => {
+        const select = document.getElementById('filterAgency-' + tabName);
+        if (select) {
+            const currentValue = select.value;
+            populateAgencyDropdown(select, currentValue);
+        }
+    });
+}
+
+// ============================================================
+// API CALL
+// ============================================================
+function callAPI(action, params) {
+    return new Promise((resolve, reject) => {
+        if (!params) params = {};
+        const token = localStorage.getItem('sessionToken');
+        const username = localStorage.getItem('username');
+        
+        if (token && username) {
+            params.token = token;
+            if (!params.username) params.username = username;
+        }
+        
+        let url = API_BASE_URL + '?action=' + encodeURIComponent(action);
+        if (params) {
+            url += '&params=' + encodeURIComponent(JSON.stringify(params));
+        }
+        
+        fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('HTTP error! status: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error && data.error.includes('Session expired')) {
+                localStorage.removeItem('sessionToken');
+                localStorage.removeItem('username');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('userName');
+                logout();
+                showToast('Session expired. Please login again.', 'error');
+                reject(new Error('Session expired'));
+                return;
+            }
+            resolve(data);
+        })
+        .catch(fetchError => {
+            const callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            const timeoutId = setTimeout(() => {
+                if (window[callbackName]) {
+                    delete window[callbackName];
+                    reject(new Error('Request timeout'));
+                }
+            }, 10000);
+            
+            window[callbackName] = function(data) {
+                clearTimeout(timeoutId);
+                delete window[callbackName];
+                resolve(data);
+            };
+            
+            const script = document.createElement('script');
+            script.src = url + '&callback=' + callbackName;
+            script.onerror = function() {
+                clearTimeout(timeoutId);
+                delete window[callbackName];
+                reject(new Error('JSONP script failed to load'));
+            };
+            document.body.appendChild(script);
+            
+            setTimeout(() => {
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            }, 11000);
+        });
+    });
+}
+
+// ============================================================
+// LOGIN SYSTEM
+// ============================================================
+async function handleLogin() {
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+    const errorEl = document.getElementById('loginError');
+    const loginBtn = document.getElementById('loginBtn');
+    
+    errorEl.classList.remove('show');
+    
+    if (!username || !password) {
+        errorEl.textContent = 'Please enter both username and password.';
+        errorEl.classList.add('show');
+        return;
+    }
+    
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Authenticating...';
+    
+    try {
+        const result = await callAPI('authenticateUser', { 
+            username: username, 
+            password: password 
+        });
+        
+        if (result.success && result.user) {
+            loggedInUser = result.user;
+            
+            if (result.user.sessionToken) {
+                localStorage.setItem('sessionToken', result.user.sessionToken);
+                localStorage.setItem('username', result.user.username);
+                localStorage.setItem('userRole', result.user.role);
+                localStorage.setItem('userName', result.user.name);
+            }
+            
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('headerUserName').textContent = result.user.name || result.user.username;
+            document.getElementById('headerUserRole').textContent = result.user.role || 'User';
+            
+            showToast('Welcome, ' + (result.user.name || 'User') + '!', 'success');
+            
+            await loadAgencyOptions();
+            await loadDashboardData();
+        } else {
+            errorEl.textContent = result.message || 'Invalid username or password. Please try again.';
+            errorEl.classList.add('show');
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<i class="fa fa-sign-in"></i> Sign In';
+        }
+    } catch(err) {
+        errorEl.textContent = 'Error connecting to server. Please try again.';
+        errorEl.classList.add('show');
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<i class="fa fa-sign-in"></i> Sign In';
+        console.error('Login error:', err);
+    }
+}
+
+function logout() {
+    localStorage.removeItem('sessionToken');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
+    
+    loggedInUser = null;
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('loginOverlay').style.display = 'flex';
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('loginBtn').disabled = false;
+    document.getElementById('loginBtn').innerHTML = '<i class="fa fa-sign-in"></i> Sign In';
+    showToast('Logged out successfully', 'info');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') handleLogin();
+    });
+    document.getElementById('loginUsername').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') document.getElementById('loginPassword').focus();
+    });
+    document.getElementById('loginUsername').focus();
+});
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function switchTab(tabName) {
+    currentTab = tabName;
+    
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    const tabMap = {
+        'all': { btn: 0, content: 'tab-all' },
+        'gram': { btn: 1, content: 'tab-gram' },
+        'old-all': { btn: 2, content: 'tab-old-all' },
+        'old-gramin': { btn: 3, content: 'tab-old-gramin' }
+    };
+    
+    if (tabMap[tabName]) {
+        document.querySelectorAll('.tab-btn')[tabMap[tabName].btn].classList.add('active');
+        document.getElementById(tabMap[tabName].content).classList.add('active');
+        
+        if (allData[tabName].ads.length === 0) {
+            loadTabData(tabName);
+        } else {
+            applyFilters(tabName);
+        }
+    }
+}
+
+// ============================================================
+// LOAD DASHBOARD DATA
+// ============================================================
+async function loadDashboardData() {
+    try {
+        showToast('Loading data...', 'info');
+        
+        await loadTabData('all');
+        await loadTabData('gram');
+        await loadTabData('old-all');
+        await loadTabData('old-gramin');
+        
+        switchTab('all');
+        
+        updateGlobalStats();
+        showToast('Dashboard loaded successfully!', 'success');
+    } catch(error) {
+        console.error('Error loading dashboard:', error);
+        showError('Error loading dashboard: ' + error.message);
+        if (error.message && error.message.includes('Session expired')) {
+            logout();
+        }
+    }
+}
+
+async function loadTabData(tabName) {
+    try {
+        const sheetMap = {
+            'all': 'All',
+            'gram': 'Gram',
+            'old-all': 'OLD-ALL',
+            'old-gramin': 'OLD-GRAMIN'
+        };
+        
+        const result = await callAPI('getDashboardData', { 
+            username: loggedInUser.username,
+            role: loggedInUser.role,
+            name: loggedInUser.name,
+            sheetName: sheetMap[tabName],
+            token: localStorage.getItem('sessionToken')
+        });
+        
+        if (result.success) {
+            allData[tabName].ads = result.ads || [];
+            allData[tabName].filters = result.filters || {};
+            
+            populateFiltersForTab(tabName);
+            applyFilters(tabName);
+            
+            return true;
+        } else {
+            showToast('Error loading ' + tabName + ': ' + (result.error || 'Unknown error'), 'error');
+            return false;
+        }
+    } catch(error) {
+        console.error('Error loading tab data:', error);
+        return false;
+    }
+}
+
+// ============================================================
+// UPDATE GLOBAL STATS
+// ============================================================
+function updateGlobalStats() {
+    const statsContainer = document.getElementById('headerStats');
+    
+    const totalAds = allData['all'].ads.length + allData['gram'].ads.length;
+    const desks = new Set([...allData['all'].ads, ...allData['gram'].ads].map(ad => ad.Desk).filter(d => d));
+    const executives = new Set([...allData['all'].ads, ...allData['gram'].ads].map(ad => ad.Executive).filter(e => e));
+    const agencies = new Set([...allData['all'].ads, ...allData['gram'].ads].map(ad => ad['Agency/Reporter']).filter(a => a));
+    
+    statsContainer.innerHTML = `
+        <span class="stat-chip">
+            <span class="stat-label">📋 Total</span>
+            <span class="stat-value">${totalAds}</span>
+        </span>
+        <span class="stat-divider">|</span>
+        <span class="stat-chip">
+            <span class="stat-label">🏢 Desks</span>
+            <span class="stat-value">${desks.size}</span>
+        </span>
+        <span class="stat-divider">|</span>
+        <span class="stat-chip">
+            <span class="stat-label">👤 Executives</span>
+            <span class="stat-value">${executives.size}</span>
+        </span>
+        <span class="stat-divider">|</span>
+        <span class="stat-chip">
+            <span class="stat-label">📰 Agencies</span>
+            <span class="stat-value">${agencies.size}</span>
+        </span>
+    `;
+}
+
+// ============================================================
+// POPULATE FILTERS FOR TAB
+// ============================================================
+function populateFiltersForTab(tabName) {
+    const filterMapping = {
+        'filterDesk': 'Desk',
+        'filterAgency': 'Agency/Reporter',
+        'filterExecutive': 'Executive',
+        'filterEdition': 'Edtion',
+        'filterToDTP': 'To-DTP',
+        'filterSchedule': 'Schedule',
+        'filterForm': 'Form',
+        'filterPage': 'Page',
+        'filterFile': 'File',
+        'filterAdvtRemark': 'Advt-Remark',
+        'filterLocation': 'Location',
+        'filterPhoto': 'Photo',
+        'filterICDUser': 'ICD-User',
+        'filterICDRemark': 'ICD-Remark'
+    };
+    
+    const filters = allData[tabName].filters;
+    
+    Object.keys(filterMapping).forEach(filterId => {
+        const key = filterMapping[filterId];
+        const selectId = filterId + '-' + tabName;
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        
+        if (filterId === 'filterAgency') {
+            populateAgencyDropdown(select);
+            return;
+        }
+        
+        const values = filters[key] || [];
+        select.innerHTML = '<option value="__ALL__">All</option>';
+        
+        if (filterId === 'filterEdition') {
+            EDITION_OPTIONS.forEach(val => {
+                const option = document.createElement('option');
+                option.value = val;
+                option.textContent = val;
+                select.appendChild(option);
+            });
+            return;
+        }
+        
+        if (filterId === 'filterSchedule') {
+            SCHEDULE_OPTIONS.forEach(val => {
+                const option = document.createElement('option');
+                option.value = val;
+                option.textContent = val;
+                select.appendChild(option);
+            });
+            return;
+        }
+        
+        const sortedValues = [...values].sort();
+        sortedValues.forEach(val => {
+            const option = document.createElement('option');
+            option.value = val;
+            let displayVal = val;
+            if (filterId === 'filterToDTP' && val) {
+                displayVal = formatDateForDisplay(val);
+            }
+            option.textContent = displayVal;
+            select.appendChild(option);
+        });
+    });
+}
+
+// ============================================================
+// APPLY FILTERS
+// ============================================================
+function applyFilters(tabName) {
+    const filterMapping = {
+        'filterDesk': 'Desk',
+        'filterAgency': 'Agency/Reporter',
+        'filterExecutive': 'Executive',
+        'filterEdition': 'Edtion',
+        'filterToDTP': 'To-DTP',
+        'filterSchedule': 'Schedule',
+        'filterForm': 'Form',
+        'filterPage': 'Page',
+        'filterFile': 'File',
+        'filterAdvtRemark': 'Advt-Remark',
+        'filterLocation': 'Location',
+        'filterPhoto': 'Photo',
+        'filterICDUser': 'ICD-User',
+        'filterICDRemark': 'ICD-Remark'
+    };
+    
+    const activeFilters = {};
+    Object.keys(filterMapping).forEach(filterId => {
+        const key = filterMapping[filterId];
+        const selectId = filterId + '-' + tabName;
+        const select = document.getElementById(selectId);
+        if (select) {
+            const val = select.value;
+            if (val && val !== '__ALL__' && val !== '__ADD_NEW__') {
+                activeFilters[key] = val;
+            }
+        }
+    });
+    
+    const allAds = allData[tabName].ads || [];
+    
+    const filteredAds = allAds.filter(ad => {
+        for (const [key, val] of Object.entries(activeFilters)) {
+            let adValue = ad[key] || '';
+            if (key === 'To-DTP') {
+                adValue = formatDateForDisplay(adValue);
+                if (adValue !== val) return false;
+            } else {
+                if (adValue !== val) return false;
+            }
+        }
+        return true;
+    });
+    
+    allData[tabName].filtered = filteredAds;
+    renderAds(filteredAds, tabName);
+    updateDisplayStats(tabName);
+}
+
+// ============================================================
+// UPDATE DISPLAY STATS
+// ============================================================
+function updateDisplayStats(tabName) {
+    const filteredAds = allData[tabName].filtered || [];
+    const desks = new Set(filteredAds.map(ad => ad.Desk).filter(d => d));
+    const executives = new Set(filteredAds.map(ad => ad.Executive).filter(e => e));
+    const agencies = new Set(filteredAds.map(ad => ad['Agency/Reporter']).filter(a => a));
+    
+    document.getElementById('displayCount-' + tabName).textContent = filteredAds.length;
+    document.getElementById('displayDesks-' + tabName).textContent = desks.size;
+    document.getElementById('displayExecutives-' + tabName).textContent = executives.size;
+    document.getElementById('displayAgencies-' + tabName).textContent = agencies.size;
+}
+
+// ============================================================
+// RENDER ADS
+// ============================================================
+function renderAds(ads, tabName) {
+    const gridId = 'adsGrid-' + tabName;
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+    
+    if (ads.length === 0) {
+        grid.innerHTML = `
+            <div class="no-results">
+                <i class="fa fa-search"></i>
+                No advertisements found matching the current filters
+                <br><small style="color:#484f58;">Try adjusting your filters</small>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    ads.forEach((ad, index) => {
+        html += buildAdCard(ad, index, tabName);
+    });
+    grid.innerHTML = html;
+}
+
+function buildAdCard(ad, index, tabName) {
+    const allAds = allData[tabName].ads;
+    const rowIndex = allAds.indexOf(ad);
+    const deskColor = ad.Desk ? getColorFromString(ad.Desk) : '#30363d';
+    
+    const toDTPValue = ad['To-DTP'] || '—';
+    const formattedDate = toDTPValue !== '—' ? formatDateForDisplay(toDTPValue) : '—';
+    
+    const scheduleValue = ad.Schedule || 'None';
+    const scheduleDisplay = scheduleValue === 'None' ? '—' : scheduleValue;
+    
+    // Calculate Total with GST for display (base amount * 1.05)
+    let totalDisplay = ad.Total || '—';
+if (totalDisplay !== '—' && !isNaN(totalDisplay)) {
+    const baseAmount = parseFloat(totalDisplay);
+    const totalWithGST = Math.round(baseAmount * 1.05); // Whole number
+    totalDisplay = totalWithGST.toString();
+}
+    
+    return `
+        <div class="ad-card" style="border-left-color: ${deskColor};">
+            <div class="card-header">
+                <span class="file-name">📄 ${escapeHtml(ad.File || '—')}</span>
+                <div class="badge-group">
+                    <span class="desk-badge">${escapeHtml(ad.Desk || '—')}</span>
+                    ${ad['ICD-User'] ? `<span class="icd-badge">ICD: ${escapeHtml(ad['ICD-User'])}</span>` : ''}
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <span class="label">Client:</span>
+                        <span class="value">${escapeHtml(ad.Client || '—')}</span>
+                    </div>
+                    <div class="col">
+                        <span class="label">Agency/Reporter:</span>
+                        <span class="value">${escapeHtml(ad['Agency/Reporter'] || '—')}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="label">Executive:</span>
+                        <span class="value">${escapeHtml(ad.Executive || '—')}</span>
+                    </div>
+                    <div class="col">
+                        <span class="label">Edition:</span>
+                        <span class="value">${escapeHtml(ad.Edtion || '—')}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="label">Size:</span>
+                        <span class="value">${escapeHtml(ad['Size-Width'] || '—')} × ${escapeHtml(ad['Size-Height'] || '—')}</span>
+                    </div>
+                    <div class="col">
+                        <span class="label">SQCM:</span>
+                        <span class="value highlight">${escapeHtml(ad.SQCM || '—')}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="label">Total (inc GST):</span>
+                        <span class="value highlight">${escapeHtml(totalDisplay)}</span>
+                    </div>
+                    <div class="col">
+                        <span class="label">GST:</span>
+                        <span class="value">${escapeHtml(ad.GST || '—')}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="label">Rate:</span>
+                        <span class="value">${escapeHtml(ad.Rate || '—')}</span>
+                    </div>
+                    <div class="col">
+                        <span class="label">To-DTP:</span>
+                        <span class="value">${escapeHtml(formattedDate)}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="label">File:</span>
+                        <span class="value">${escapeHtml(ad.File || '—')}</span>
+                    </div>
+                    <div class="col">
+                        <span class="label">Advt-Remark:</span>
+                        <span class="value">${escapeHtml(ad['Advt-Remark'] || '—')}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="label">Location:</span>
+                        <span class="value">${escapeHtml(ad.Location || '—')}</span>
+                    </div>
+                    <div class="col">
+                        <span class="label">Photo:</span>
+                        <span class="value">${ad.Photo === 'Yes' ? '<span class="value boolean-yes">Yes</span>' : '<span class="value boolean-no">No</span>'}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="label">ICD-User:</span>
+                        <span class="value">${escapeHtml(ad['ICD-User'] || '—')}</span>
+                    </div>
+                    <div class="col">
+                        <span class="label">ICD-Remark:</span>
+                        <span class="value">${escapeHtml(ad['ICD-Remark'] || '—')}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="label">Schedule:</span>
+                        <span class="value">${escapeHtml(scheduleDisplay)}</span>
+                    </div>
+                    <div class="col">
+                        <span class="label">Form:</span>
+                        <span class="value">${escapeHtml(ad.Form || '—')}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="label">Page:</span>
+                        <span class="value">${escapeHtml(ad.Page || '—')}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="btn-action btn-edit" onclick="openEditModal('${tabName}', ${rowIndex})">
+                    <i class="fa fa-edit"></i> Edit
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// ============================================================
+// HELPER: Get Color from String
+// ============================================================
+function getColorFromString(str) {
+    const colors = ['#1a3a6b', '#6f42c1', '#c0392b', '#2a9922', '#c79306', '#2245f2', '#8e44ad', '#2980b9'];
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+}
+
+// ============================================================
+// OPEN EDIT MODAL
+// ============================================================
+async function openEditModal(tabName, rowIndex) {
+    isAddMode = false;
+    currentEditRowIndex = rowIndex;
+    currentEditSheet = tabName;
+    
+    const modal = document.getElementById('editAdModal');
+    const body = document.getElementById('editModalBody');
+    const saveBtn = document.getElementById('saveAdBtn');
+    const title = document.getElementById('modalTitle');
+    
+    const sheetMap = {
+        'all': 'All',
+        'gram': 'Gram',
+        'old-all': 'OLD-ALL',
+        'old-gramin': 'OLD-GRAMIN'
+    };
+    
+    title.innerHTML = '<i class="fa fa-edit"></i> Edit Advertisement (' + sheetMap[tabName] + ')';
+    modal.classList.add('show');
+    body.innerHTML = '<div style="text-align:center; padding:20px; color:#8b949e;"><i class="fa fa-spinner fa-spin" style="font-size:24px; display:block; margin-bottom:10px;"></i> Loading data...</div>';
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Loading...';
+    
+    try {
+        const result = await callAPI('getAdData', {
+            username: loggedInUser.username,
+            rowIndex: rowIndex,
+            sheetName: sheetMap[tabName]
+        });
+        
+        if (result.success) {
+            await renderEditForm(result.ad, tabName);  // Pass tabName to renderEditForm
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fa fa-save"></i> Save Changes';
+        } else {
+            body.innerHTML = `
+                <div class="no-results" style="padding:20px; margin:0;">
+                    <i class="fa fa-exclamation-triangle" style="color:#f85149;"></i>
+                    <p style="color:#f85149;">${escapeHtml(result.error || 'Error loading data')}</p>
+                </div>
+            `;
+            saveBtn.style.display = 'none';
+        }
+    } catch(error) {
+        body.innerHTML = `
+            <div class="no-results" style="padding:20px; margin:0;">
+                <i class="fa fa-exclamation-triangle" style="color:#f85149;"></i>
+                <p style="color:#f85149;">Error: ${escapeHtml(error.message)}</p>
+            </div>
+        `;
+        saveBtn.style.display = 'none';
+    }
+}
+
+// ============================================================
+// OPEN ADD MODAL
+// ============================================================
+function openAddModal(tabName) {
+    isAddMode = true;
+    currentEditRowIndex = -1;
+    currentEditSheet = tabName;
+    
+    const modal = document.getElementById('editAdModal');
+    const body = document.getElementById('editModalBody');
+    const saveBtn = document.getElementById('saveAdBtn');
+    const title = document.getElementById('modalTitle');
+    
+    const sheetMap = {
+        'all': 'All',
+        'gram': 'Gram',
+        'old-all': 'OLD-ALL',
+        'old-gramin': 'OLD-GRAMIN'
+    };
+    
+    title.innerHTML = '<i class="fa fa-plus"></i> Add New Advertisement (' + sheetMap[tabName] + ')';
+    modal.classList.add('show');
+    
+    let defaultEdition = 'All';
+    let defaultDesk = '';
+    if (tabName === 'gram' || tabName === 'old-gramin') {
+        defaultEdition = 'Gram';
+        defaultDesk = 'Gram';  // Set default Desk to Gram for Gram tabs
+    }
+    
+    const emptyAd = {
+        Desk: defaultDesk,  // This will be 'Gram' for Gram tabs, empty for others
+        'Agency/Reporter': '',
+        Executive: '',
+        Client: '',
+        Edtion: defaultEdition,
+        'Size-Width': '',
+        'Size-Height': '',
+        SQCM: '0',
+        Total: '',
+        GST: '0',
+        'To-DTP': '',
+        File: '',
+        Rate: '0',
+        'Advt-Remark': '',
+        Location: '',
+        Photo: '',
+        'ICD-User': loggedInUser.username || '',
+        'ICD-Remark': '',
+        Schedule: '',
+        Form: '',
+        Page: ''
+    };
+    
+    renderEditForm(emptyAd, tabName);  // Pass tabName to renderEditForm
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = '<i class="fa fa-plus"></i> Add New';
+    saveBtn.style.display = 'inline-block';
+}
+
+// ============================================================
+// RENDER EDIT FORM
+// ============================================================
+async function renderEditForm(ad, tabName) {
+    const body = document.getElementById('editModalBody');
+    const saveBtn = document.getElementById('saveAdBtn');
+    saveBtn.style.display = 'inline-block';
+    
+    if (datePickerInstance) {
+        datePickerInstance.destroy();
+        datePickerInstance = null;
+    }
+    
+    // Determine which executives to show based on tab
+    let executiveOptions = [];
+    if (tabName === 'gram' || tabName === 'old-gramin') {
+        // Gram tabs: Show only Gram executives
+        executiveOptions = ['Sambhaji', 'Milind', 'Avinash', 'Nikhil'];
+    } else {
+        // All tabs: Show all executives
+        executiveOptions = ['Yuvraj', 'Ketan', 'Kiran', 'Rushikesh', 'Uttam', 'Rohit', 'Sambhaji', 'Milind', 'Avinash', 'Nikhil'];
+    }
+    
+    const createOptions = (options, selectedValue) => {
+        let html = '';
+        options.forEach(opt => {
+            const selected = opt === selectedValue ? 'selected' : '';
+            html += `<option value="${escapeHtml(opt)}" ${selected}>${escapeHtml(opt)}</option>`;
+        });
+        return html;
+    };
+    
+    const fieldGroups = [
+        [
+            { key: 'Executive', label: 'Executive', type: 'select', options: executiveOptions },  // Now uses filtered options
+            { key: 'Desk', label: 'Desk', type: 'readonly', hint: 'Auto-assigned based on Executive' },
+            { key: 'Agency/Reporter', label: 'Agency/Reporter', type: 'agency' }
+        ],
+        [
+            { key: 'Client', label: 'Client', type: 'text' },
+            { key: 'Edtion', label: 'Edition', type: 'select', options: EDITION_OPTIONS },
+            { key: 'Photo', label: 'Photo', type: 'select', options: ['Yes', 'No'] }
+        ],
+        [
+            { key: 'Size-Width', label: 'Width', type: 'number', hint: 'Whole number only' },
+            { key: 'Size-Height', label: 'Height', type: 'number', hint: 'Whole number only' },
+            { key: 'SQCM', label: 'SQCM', type: 'calculated', hint: 'Auto-calculated from Width × Height' }
+        ],
+        [
+            { key: 'Total', label: 'Total (including GST)', type: 'number', hint: 'Enter total amount including GST' },
+            { key: 'GST', label: 'GST (5%)', type: 'calculated', hint: 'Auto-calculated: 5% of base amount' },
+            { key: 'Rate', label: 'Rate', type: 'calculated', hint: 'Auto-calculated: Base Amount ÷ SQCM' }
+        ],
+        [
+            { key: 'To-DTP', label: 'To-DTP', type: 'date' },
+            { key: 'File', label: 'File', type: 'text' },
+            { key: 'Advt-Remark', label: 'Advt-Remark', type: 'text' }
+        ],
+        [
+            { key: 'Location', label: 'Location', type: 'text' },
+            { key: 'ICD-User', label: 'ICD-User', type: 'select', options: ICD_USER_OPTIONS },
+            { key: 'ICD-Remark', label: 'ICD-Remark', type: 'text' }
+        ],
+        [
+            { key: 'Schedule', label: 'Schedule', type: 'readonly-text' },
+            { key: 'Form', label: 'Form', type: 'readonly-text' },
+            { key: 'Page', label: 'Page', type: 'readonly-text' }
+        ]
+    ];
+    
+    let html = '';
+    
+    for (const group of fieldGroups) {
+        html += `<div style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px 20px;">`;
+        for (const field of group) {
+            const value = ad[field.key] || '';
+            const isCalculated = field.type === 'calculated';
+            const isDate = field.type === 'date';
+            const isReadonly = field.type === 'readonly';
+            const isAgency = field.type === 'agency';
+            const isReadonlyText = field.type === 'readonly-text';
+            
+            let displayVal = isDate ? formatDateForDisplay(value) : value;
+            
+            // For editing, show the base amount in Total field
+            if (field.key === 'Total' && value && value !== '' && !isAddMode) {
+                const baseAmount = parseFloat(value);
+                if (!isNaN(baseAmount) && baseAmount > 0) {
+                    displayVal = formatRate(baseAmount * 1.05);
+                }
+            }
+            
+            if (field.key === 'Rate' && value && value !== '0') {
+                const num = parseFloat(value);
+                if (!isNaN(num) && num > 0) {
+                    displayVal = formatRate(num);
+                }
+            }
+            if (field.key === 'GST' && value && value !== '0') {
+                const num = parseFloat(value);
+                if (!isNaN(num) && num > 0) {
+                    displayVal = formatRate(num);
+                }
+            }
+            
+            const readonlyAttr = (isCalculated || isReadonly || isReadonlyText) ? 'readonly' : '';
+            const classAttr = isCalculated ? 'calculated-field' : '';
+            const isDisabled = (isReadonly || isReadonlyText) ? 'disabled' : '';
+            
+            html += `
+                <div class="form-group">
+                    <label for="edit_${field.key}">
+                        ${field.label} 
+                        ${field.key === 'To-DTP' ? '<span class="required-star">*</span>' : ''}
+                        ${isCalculated ? ' <span style="color:#58a6ff;font-size:10px;">(auto)</span>' : ''}
+                        ${isReadonly ? ' <span style="color:#8b949e;font-size:10px;">(auto)</span>' : ''}
+                        ${isReadonlyText ? ' <span style="color:#8b949e;font-size:10px;">(read-only)</span>' : ''}
+                    </label>`;
+            
+            if (isAgency) {
+                html += `
+                    <select id="edit_${field.key}" onchange="handleAgencyEditChange(this)">
+                        <option value="">— Select —</option>
+                        ${agencyOptions.map(opt => `
+                            <option value="${escapeHtml(opt)}" ${opt === value ? 'selected' : ''}>${escapeHtml(opt)}</option>
+                        `).join('')}
+                        <option value="__ADD_NEW__" style="color:#58a6ff;font-weight:bold;">+ Add New Agency/Reporter</option>
+                    </select>
+                `;
+            } else if (field.type === 'select') {
+                html += `
+                    <select id="edit_${field.key}" ${field.key === 'Executive' ? 'onchange="autoPopulateDesk(this.value)"' : ''}>
+                        <option value="">— Select —</option>
+                        ${createOptions(field.options, value)}
+                    </select>
+                `;
+            } else if (isDate) {
+                html += `
+                    <input type="text" 
+                           id="edit_${field.key}" 
+                           value="${escapeHtml(displayVal)}" 
+                           placeholder="Select date"
+                           class="datepicker-input"
+                           autocomplete="off">
+                `;
+            } else if (isReadonlyText) {
+                html += `
+                    <input type="text" 
+                           id="edit_${field.key}" 
+                           value="${escapeHtml(displayVal)}" 
+                           placeholder="Auto-generated"
+                           ${isDisabled}
+                           readonly
+                           style="background: #161b22 !important; color: #8b949e !important; cursor: not-allowed !important; opacity: 0.7 !important;">
+                `;
+            } else {
+                html += `
+                    <input type="text" 
+                           id="edit_${field.key}" 
+                           value="${escapeHtml(displayVal)}" 
+                           placeholder="${field.hint || 'Enter ' + field.label}"
+                           ${readonlyAttr}
+                           ${isDisabled}
+                           class="${classAttr}"
+                           autocomplete="off">
+                `;
+            }
+            
+            html += `
+                    ${field.hint ? `<div class="field-hint"><i class="fa fa-info-circle"></i> ${field.hint}</div>` : ''}
+                    ${isReadonlyText ? `<div class="field-hint"><i class="fa fa-info-circle"></i> This field is auto-generated and read-only</div>` : ''}
+                </div>
+            `;
+        }
+        html += `</div>`;
+    }
+    
+    body.innerHTML = html;
+    
+    const execInput = document.getElementById('edit_Executive');
+    if (execInput && execInput.value) {
+        autoPopulateDesk(execInput.value);
+    }
+    
+    const widthInput = document.getElementById('edit_Size-Width');
+    const heightInput = document.getElementById('edit_Size-Height');
+    const totalInput = document.getElementById('edit_Total');
+    
+    if (widthInput) {
+        widthInput.addEventListener('input', updateCalculations);
+        widthInput.addEventListener('change', updateCalculations);
+    }
+    if (heightInput) {
+        heightInput.addEventListener('input', updateCalculations);
+        heightInput.addEventListener('change', updateCalculations);
+    }
+    if (totalInput) {
+        totalInput.addEventListener('input', updateCalculations);
+        totalInput.addEventListener('change', updateCalculations);
+    }
+    
+    const dateInput = document.getElementById('edit_To-DTP');
+    if (dateInput) {
+        datePickerInstance = flatpickr(dateInput, {
+            dateFormat: 'd-m-Y',
+            allowInput: true,
+            placeholder: 'Select date',
+            onChange: function(selectedDates, dateStr, instance) {}
+        });
+        
+        if (dateInput.value) {
+            const dateObj = parseDateFromSheet(dateInput.value);
+            if (dateObj && !isNaN(dateObj.getTime())) {
+                datePickerInstance.setDate(dateObj);
+            }
+        }
+    }
+    
+    // Trigger calculations after form is rendered
+    setTimeout(updateCalculations, 100);
+    
+    const firstInput = body.querySelector('input:not([readonly]):not([disabled]), select:not([disabled])');
+    if (firstInput) firstInput.focus();
+}
+
+function handleAgencyEditChange(select) {
+    if (select.value === '__ADD_NEW__') {
+        const newAgency = prompt('Enter new Agency/Reporter name:');
+        if (newAgency && newAgency.trim()) {
+            const trimmed = newAgency.trim();
+            if (agencyOptions.includes(trimmed)) {
+                showToast('Agency/Reporter already exists: ' + trimmed, 'error');
+                select.value = trimmed;
+                return;
+            }
+            const option = document.createElement('option');
+            option.value = trimmed;
+            option.textContent = trimmed;
+            option.selected = true;
+            select.insertBefore(option, select.options[select.options.length - 1]);
+            saveNewAgency(trimmed);
+        } else {
+            select.value = '';
+        }
+    }
+}
+
+// ============================================================
+// SAVE AD DATA - UPDATED
+// ============================================================
+async function saveAdData() {
+    const saveBtn = document.getElementById('saveAdBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
+    
+    try {
+        const sheetMap = {
+            'all': 'All',
+            'gram': 'Gram',
+            'old-all': 'OLD-ALL',
+            'old-gramin': 'OLD-GRAMIN'
+        };
+        
+        const fieldConfig = [
+            'Desk', 'Agency/Reporter', 'Executive', 'Client', 'Edtion', 
+            'Size-Width', 'Size-Height', 'SQCM', 'Total', 'GST', 
+            'To-DTP', 'File', 'Rate', 'Advt-Remark', 'Location', 
+            'Photo', 'ICD-User', 'ICD-Remark', 'Schedule', 'Form', 'Page'
+        ];
+        
+        const adData = {};
+        
+        fieldConfig.forEach(key => {
+            const element = document.getElementById(`edit_${key}`);
+            if (element) {
+                let value = element.value.trim();
+                
+                if (key === 'To-DTP' && value) {
+                    value = formatDateForSheet(value);
+                }
+                
+                if (key === 'Total' && value) {
+    const totalWithGST = parseFloat(value);
+    if (!isNaN(totalWithGST) && totalWithGST > 0) {
+        const baseAmount = calculateBaseAmount(totalWithGST);
+        value = baseAmount.toString(); // Whole number
+    } else {
+        value = '0';
+    }
+}
+                
+                if (key === 'GST' && value) {
+    const totalInput = document.getElementById('edit_Total');
+    if (totalInput) {
+        const totalWithGST = parseFloat(totalInput.value);
+        if (!isNaN(totalWithGST) && totalWithGST > 0) {
+            const baseAmount = calculateBaseAmount(totalWithGST);
+            const gst = calculateGST(baseAmount);
+            value = gst.toString(); // Whole number
+        }
+    }
+}
+                
+                if (key === 'Rate' && value) {
+    const totalInput = document.getElementById('edit_Total');
+    const sqcmInput = document.getElementById('edit_SQCM');
+    if (totalInput && sqcmInput) {
+        const totalWithGST = parseFloat(totalInput.value);
+        const sqcm = parseInt(sqcmInput.value) || 0;
+        if (!isNaN(totalWithGST) && totalWithGST > 0 && sqcm > 0) {
+            const baseAmount = calculateBaseAmount(totalWithGST);
+            const rate = calculateRate(baseAmount, sqcm);
+            value = rate.toString(); // Whole number
+        }
+    }
+}
+                
+                if (['Size-Width', 'Size-Height', 'SQCM'].includes(key) && value) {
+                    const num = parseInt(value);
+                    if (!isNaN(num)) {
+                        value = num.toString();
+                    }
+                }
+                
+                adData[key] = value;
+            }
+        });
+        
+        let result;
+        
+        if (isAddMode) {
+            result = await callAPI('addAd', {
+                username: loggedInUser.username,
+                adData: adData,
+                sheetName: sheetMap[currentEditSheet]
+            });
+        } else {
+            result = await callAPI('updateAd', {
+                username: loggedInUser.username,
+                rowIndex: currentEditRowIndex,
+                adData: adData,
+                sheetName: sheetMap[currentEditSheet]
+            });
+        }
+        
+        if (result.success) {
+            showToast(isAddMode ? '✅ Ad added successfully!' : '✅ Ad updated successfully!', 'success');
+            
+            await loadTabData(currentEditSheet);
+            applyFilters(currentEditSheet);
+            updateGlobalStats();
+            
+            closeEditModal();
+        } else {
+            showToast('❌ Error saving data: ' + (result.error || 'Unknown error'), 'error');
+        }
+    } catch(error) {
+        showToast('❌ Error saving data: ' + error.message, 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = isAddMode ? '<i class="fa fa-plus"></i> Add New' : '<i class="fa fa-save"></i> Save Changes';
+    }
+}
+
+function closeEditModal() {
+    if (datePickerInstance) {
+        datePickerInstance.destroy();
+        datePickerInstance = null;
+    }
+    document.getElementById('editAdModal').classList.remove('show');
+    currentEditRowIndex = -1;
+    isAddMode = false;
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeEditModal();
+    }
+});
+
+document.getElementById('editAdModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeEditModal();
+    }
+});
+
+function showToast(message, type = 'info') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast ' + type + ' show';
+    
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+function showLoading(message = 'Processing...') {
+    const overlay = document.getElementById('loadingOverlay');
+    document.getElementById('loadingMessage').textContent = message;
+    overlay.classList.add('show');
+}
+
+function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('show');
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function showError(message) {
+    const grid = document.getElementById('adsGrid-' + currentTab);
+    if (!grid) return;
+    grid.innerHTML = `
+        <div class="no-results" style="border-left: 4px solid #c62828;">
+            <i class="fa fa-exclamation-triangle" style="color:#f85149;"></i>
+            ${escapeHtml(message)}
+            <br><small style="color:#484f58;">Please check your connection and try again</small>
+        </div>
+    `;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('sessionToken');
+    const username = localStorage.getItem('username');
+    if (token && username) {
+        document.getElementById('loginUsername').value = username;
+        document.getElementById('loginPassword').value = '****';
+    }
+});
+</script>
+
+</body>
+</html>
