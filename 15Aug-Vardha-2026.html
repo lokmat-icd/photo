@@ -1914,7 +1914,7 @@
 // ============================================================
 // CONFIGURATION
 // ============================================================
-const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbyqtM5NXdFrdV76Rfg0VCbWlc6jRhzzCUFij-0-PZ8eIElGkTaEIRkGnpglHpzv92Lxkw/exec';
+const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbxIQ7VUq4eD0VB9iv7rRtcNVQ-p-s0O3s0ofLwPzyGHuMQ4TaM6K5LVC-OzygaFedPPJw/exec';
 
 // ============================================================
 // DROPDOWN DATA
@@ -2418,6 +2418,7 @@ function updateTabVisibility(userRole) {
         }
     });
     if (headerStats) headerStats.innerHTML = '';
+	updateAddButtonVisibility();
 }
 
 // ============================================================
@@ -2588,6 +2589,24 @@ function switchTab(tabName) {
             loadTabData(tabName);
         } else {
             applyFilters(tabName);
+        }
+    }
+	updateAddButtonVisibility
+}
+
+function updateAddButtonVisibility() {
+    const currentTab = document.querySelector('.tab-btn.active');
+    if (currentTab) {
+        const tabName = currentTab.getAttribute('data-tab');
+        const fabContainers = document.querySelectorAll('.fab-container');
+        if (tabName === 'old-all' || tabName === 'old-gramin') {
+            fabContainers.forEach(container => {
+                container.style.display = 'none';
+            });
+        } else {
+            fabContainers.forEach(container => {
+                container.style.display = 'flex';
+            });
         }
     }
 }
@@ -3268,6 +3287,15 @@ async function openEditModal(tabName, rowIndex) {
 // OPEN ADD MODAL
 // ============================================================
 function openAddModal(tabName) {
+    // ============================================================
+    // Only allow adding to All, Gram, Daily sheets
+    // OLD-ALL and OLD-GRAMIN are read-only
+    // ============================================================
+    if (tabName === 'old-all' || tabName === 'old-gramin') {
+        showToast('⚠️ This tab is read-only. You cannot add new records here.', 'error');
+        return;
+    }
+    
     isAddMode = true;
     currentEditRowIndex = -1;
     currentEditSheet = tabName;
@@ -3280,22 +3308,27 @@ function openAddModal(tabName) {
     const sheetMap = {
         'all': 'All',
         'gram': 'Gram',
-        'daily': 'Daily',
-        'old-all': 'OLD-ALL',
-        'old-gramin': 'OLD-GRAMIN'
+        'daily': 'Daily'
     };
     
     title.innerHTML = '<i class="fa fa-plus"></i> Add New Advertisement (' + sheetMap[tabName] + ')';
     modal.classList.add('show');
     
+    // ============================================================
+    // Set Edition based on tab - ALWAYS READ-ONLY
+    // ============================================================
     let defaultEdition = 'All';
     let defaultDesk = '';
-    if (tabName === 'gram' || tabName === 'old-gramin') {
+    
+    if (tabName === 'gram') {
         defaultEdition = 'Gram';
         defaultDesk = 'Gram';
-    }
-    if (tabName === 'daily') {
+    } else if (tabName === 'daily') {
         defaultEdition = 'Daily';
+        defaultDesk = '';
+    } else {
+        // 'all' tab
+        defaultEdition = 'All';
         defaultDesk = '';
     }
     
@@ -3324,7 +3357,8 @@ function openAddModal(tabName) {
         Page: ''
     };
     
-    renderEditForm(emptyAd, tabName);
+    // Pass isEditionReadOnly = true to lock the Edition field
+    renderEditForm(emptyAd, tabName, true);
     saveBtn.disabled = false;
     saveBtn.innerHTML = '<i class="fa fa-plus"></i> Add New';
     saveBtn.style.display = 'inline-block';
@@ -3333,7 +3367,7 @@ function openAddModal(tabName) {
 // ============================================================
 // RENDER EDIT FORM - ICD specific layout
 // ============================================================
-async function renderEditForm(ad, tabName) {
+async function renderEditForm(ad, tabName, isEditionReadOnly = true) {
     const body = document.getElementById('editModalBody');
     const saveBtn = document.getElementById('saveAdBtn');
     saveBtn.style.display = 'inline-block';
@@ -3375,6 +3409,9 @@ async function renderEditForm(ad, tabName) {
         ],
         [
             { key: 'Desk', label: 'Desk', type: 'readonly', hint: 'Auto-assigned based on Executive', isReadOnly: true },
+            // ============================================================
+            // Edition is ALWAYS read-only for adding new records
+            // ============================================================
             { key: 'Edtion', label: 'Edition', type: 'select', options: EDITION_OPTIONS, isReadOnly: true },
             { key: 'Photo', label: 'Photo', type: 'select', options: ['Yes', 'No'], isReadOnly: false }
         ],
@@ -3411,7 +3448,10 @@ async function renderEditForm(ad, tabName) {
         ],
         [
             { key: 'Desk', label: 'Desk', type: 'readonly', hint: 'Auto-assigned based on Executive', isReadOnly: true },
-            { key: 'Edtion', label: 'Edition', type: 'select', options: EDITION_OPTIONS, isReadOnly: false },
+            // ============================================================
+            // Edition is ALWAYS read-only for adding new records
+            // ============================================================
+            { key: 'Edtion', label: 'Edition', type: 'select', options: EDITION_OPTIONS, isReadOnly: true },
             { key: 'Photo', label: 'Photo', type: 'select', options: ['Yes', 'No'], isReadOnly: false }
         ],
         [
@@ -3507,6 +3547,14 @@ async function renderEditForm(ad, tabName) {
             const readOnlyLabel = (isICD && !icdEditableFields.includes(field.key) && field.key !== '' && field.key !== 'Size' && field.type !== 'empty') ? 
                 ' <span style="color:#f85149;font-size:10px;">(view only)</span>' : '';
             
+            // ============================================================
+            // Add hint for locked Edition field
+            // ============================================================
+            let editionLockHint = '';
+            if (field.key === 'Edtion' && isFieldReadOnly) {
+                editionLockHint = ' <span style="color:#58a6ff;font-size:10px;">(auto - saves to ' + value + ' sheet)</span>';
+            }
+            
             html += `
                 <div class="form-group">
                     <label for="edit_${field.key}">
@@ -3515,6 +3563,7 @@ async function renderEditForm(ad, tabName) {
                         ${isCalculated ? ' <span style="color:#58a6ff;font-size:10px;">(auto)</span>' : ''}
                         ${isReadonly ? ' <span style="color:#8b949e;font-size:10px;">(auto)</span>' : ''}
                         ${readOnlyLabel}
+                        ${editionLockHint}
                     </label>`;
             
             if (isAgency) {
@@ -3577,6 +3626,9 @@ async function renderEditForm(ad, tabName) {
             let hintText = field.hint || '';
             if (isICD && !icdEditableFields.includes(field.key) && field.key !== '' && field.key !== 'Size' && field.type !== 'empty' && !field.isReadOnly) {
                 hintText = 'View only - Contact Admin to edit';
+            }
+            if (field.key === 'Edtion' && isFieldReadOnly) {
+                hintText = 'Edition is locked. Data will be saved to the "' + value + '" sheet.';
             }
             
             html += `
@@ -3659,13 +3711,24 @@ async function saveAdData() {
     saveBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
     
     try {
-        const sheetMap = {
-            'all': 'All',
-            'gram': 'Gram',
-            'daily': 'Daily',
-            'old-all': 'OLD-ALL',
-            'old-gramin': 'OLD-GRAMIN'
+        // ============================================================
+        // Determine sheet based on the Edition field value
+        // Edition is read-only, so it matches the tab
+        // ============================================================
+        const editionElement = document.getElementById('edit_Edtion');
+        const editionValue = editionElement ? editionElement.value.trim() : 'All';
+        
+        // Map Edition value to sheet name
+        const editionToSheet = {
+            'All': 'All',
+            'Gram': 'Gram',
+            'Daily': 'Daily'
         };
+        
+        const targetSheet = editionToSheet[editionValue] || 'All';
+        
+        console.log('📝 Edition value:', editionValue);
+        console.log('📂 Saving to sheet:', targetSheet);
         
         const icdEditableFields = ['To-DTP', 'File', 'Advt-Remark', 'Location', 'Photo', 'ICD-User', 'ICD-Remark', 'Schedule', 'Form', 'Page'];
         const isICD = isICDRole();
@@ -3742,12 +3805,23 @@ async function saveAdData() {
         let result;
         
         if (isAddMode) {
+            // ============================================================
+            // Save to sheet based on Edition value
+            // ============================================================
             result = await callAPI('addAd', {
                 username: loggedInUser.username,
                 adData: adData,
-                sheetName: sheetMap[currentEditSheet]
+                sheetName: targetSheet  // ← Based on Edition!
             });
         } else {
+            // For editing, use the sheet where the data currently exists
+            const sheetMap = {
+                'all': 'All',
+                'gram': 'Gram',
+                'daily': 'Daily',
+                'old-all': 'OLD-ALL',
+                'old-gramin': 'OLD-GRAMIN'
+            };
             result = await callAPI('updateAd', {
                 username: loggedInUser.username,
                 rowIndex: currentEditRowIndex,
@@ -3759,8 +3833,14 @@ async function saveAdData() {
         if (result.success) {
             showToast(isAddMode ? '✅ Ad added successfully!' : '✅ Ad updated successfully!', 'success');
             
-            await loadTabData(currentEditSheet);
-            applyFilters(currentEditSheet);
+            // Reload all tabs to reflect changes
+            await loadTabData('all');
+            await loadTabData('gram');
+            await loadTabData('daily');
+            await loadTabData('old-all');
+            await loadTabData('old-gramin');
+            
+            applyFilters(currentTab);
             
             const userRole = loggedInUser ? loggedInUser.role : '';
             if (ADMIN_ROLES.includes(userRole) || ADVT_ROLES.includes(userRole)) {
