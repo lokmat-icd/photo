@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,7 +67,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: grab;
+    cursor: default;
+    touch-action: none;
 }
 
 .image-container:active {
@@ -80,6 +82,9 @@ body {
     transform-origin: center center;
     transition: transform 0.15s ease;
     user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+    display: block;
 }
 
 /* Zoom controls */
@@ -90,6 +95,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    z-index: 10;
 }
 
 .zoom-controls button {
@@ -211,6 +217,7 @@ body {
 
 /* Responsive */
 @media(max-width: 600px) {
+
     .gallery {
         padding: 12px;
     }
@@ -238,6 +245,7 @@ body {
 
     <div class="header">
         <h1>Photo Gallery</h1>
+
         <div class="counter">
             Photo <span id="currentNumber">1</span>
             / <span id="totalNumber">1000</span>
@@ -247,9 +255,7 @@ body {
     <!-- IMAGE DISPLAY -->
     <div class="image-container" id="imageContainer">
 
-        <img id="photo"
-     src="https://raw.githubusercontent.com/lokmat-icd/photo/main/Photo%20%281%29.jpg"
-     alt="Photo">
+        <img id="photo" alt="Photo">
 
         <div class="zoom-controls">
             <button onclick="zoomIn()">+</button>
@@ -289,9 +295,7 @@ body {
         >
 
         <button onclick="goToPhoto()">Go</button>
-
         <button onclick="goToFirst()">First</button>
-
         <button onclick="goToLast()">Last</button>
 
     </div>
@@ -300,42 +304,99 @@ body {
     <div class="photo-buttons" id="photoButtons"></div>
 
     <div class="status">
-        Use ← → arrow keys to navigate | Space = Slideshow |
-        + / − = Zoom
+        Use ← → arrow keys to navigate |
+        Space = Slideshow |
+        + / − = Zoom |
+        Drag = Pan when zoomed
     </div>
 
 </div>
 
 <script>
 
-/* ================================
+/* =====================================================
    SETTINGS
-================================ */
+===================================================== */
 
 const TOTAL_PHOTOS = 1000;
 
+const GITHUB_BASE =
+    "https://raw.githubusercontent.com/lokmat-icd/photo/main/";
+
 let currentPhoto = 1;
+
 let zoomLevel = 1;
+
 let slideshowTimer = null;
 
 
-/* ================================
+/* =====================================================
+   PAN STATE
+===================================================== */
+
+let translateX = 0;
+let translateY = 0;
+
+let isDragging = false;
+
+let startX = 0;
+let startY = 0;
+
+let initialTranslateX = 0;
+let initialTranslateY = 0;
+
+
+/* =====================================================
    DOM ELEMENTS
-================================ */
+===================================================== */
 
 const photo = document.getElementById("photo");
-const currentNumber = document.getElementById("currentNumber");
-const totalNumber = document.getElementById("totalNumber");
-const photoButtons = document.getElementById("photoButtons");
-const photoInput = document.getElementById("photoInput");
-const slideshowBtn = document.getElementById("slideshowBtn");
+
+const imageContainer =
+    document.getElementById("imageContainer");
+
+const currentNumber =
+    document.getElementById("currentNumber");
+
+const totalNumber =
+    document.getElementById("totalNumber");
+
+const photoButtons =
+    document.getElementById("photoButtons");
+
+const photoInput =
+    document.getElementById("photoInput");
+
+const slideshowBtn =
+    document.getElementById("slideshowBtn");
+
 
 totalNumber.textContent = TOTAL_PHOTOS;
 
 
-/* ================================
+/* =====================================================
+   IMAGE URL
+===================================================== */
+
+function getPhotoURL(number) {
+
+    /*
+       Encodes:
+       Photo (1).jpg
+
+       into:
+       Photo%20%281%29.jpg
+    */
+
+    const filename = `Photo (${number}).jpg`;
+
+    return GITHUB_BASE + encodeURIComponent(filename);
+}
+
+
+/* =====================================================
    GENERATE PHOTO BUTTONS
-================================ */
+===================================================== */
 
 function createPhotoButtons() {
 
@@ -347,51 +408,82 @@ function createPhotoButtons() {
 
         btn.textContent = i;
 
+        btn.id = "photoBtn" + i;
+
         btn.onclick = function() {
             showPhoto(i);
         };
-
-        btn.id = "photoBtn" + i;
 
         photoButtons.appendChild(btn);
     }
 }
 
 
-/* ================================
-   SHOW PHOTO
-================================ */
+/* =====================================================
+   APPLY TRANSFORM
+===================================================== */
 
-function showPhoto(number) {
+function applyTransform() {
 
-    if (number < 1) number = TOTAL_PHOTOS;
-    if (number > TOTAL_PHOTOS) number = 1;
-
-    currentPhoto = number;
-
-    photo.src =
-        `https://raw.githubusercontent.com/lokmat-icd/photo/main/Photo%20%28${number}%29.jpg`;
-
-    currentNumber.textContent = number;
-    photoInput.value = number;
-
-    resetZoom();
-    updateActiveButton();
+    photo.style.transform =
+        `scale(${zoomLevel}) translate(${translateX}px, ${translateY}px)`;
 }
 
 
-/* ================================
+/* =====================================================
+   SHOW PHOTO
+===================================================== */
+
+function showPhoto(number) {
+
+    if (number < 1)
+        number = TOTAL_PHOTOS;
+
+    if (number > TOTAL_PHOTOS)
+        number = 1;
+
+    currentPhoto = number;
+
+    /* Reset zoom and pan for new image */
+    zoomLevel = 1;
+
+    translateX = 0;
+    translateY = 0;
+
+    photo.style.transition = "none";
+
+    photo.src = getPhotoURL(number);
+
+    photo.alt = `Photo ${number}`;
+
+    currentNumber.textContent = number;
+
+    photoInput.value = number;
+
+    applyTransform();
+
+    updateActiveButton();
+
+    imageContainer.style.cursor = "default";
+
+    /* Restore transition */
+    setTimeout(() => {
+        photo.style.transition = "transform 0.15s ease";
+    }, 50);
+}
+
+
+/* =====================================================
    ACTIVE BUTTON
-================================ */
+===================================================== */
 
 function updateActiveButton() {
 
     document.querySelectorAll(".photo-buttons button")
         .forEach(btn => btn.classList.remove("active"));
 
-    const activeBtn = document.getElementById(
-        "photoBtn" + currentPhoto
-    );
+    const activeBtn =
+        document.getElementById("photoBtn" + currentPhoto);
 
     if (activeBtn) {
 
@@ -406,9 +498,9 @@ function updateActiveButton() {
 }
 
 
-/* ================================
+/* =====================================================
    NAVIGATION
-================================ */
+===================================================== */
 
 function nextPhoto() {
     showPhoto(currentPhoto + 1);
@@ -427,9 +519,9 @@ function goToLast() {
 }
 
 
-/* ================================
+/* =====================================================
    JUMP TO PHOTO
-================================ */
+===================================================== */
 
 function goToPhoto() {
 
@@ -443,15 +535,18 @@ function goToPhoto() {
 
     } else {
 
-        alert("Please enter a number between 1 and " + TOTAL_PHOTOS);
+        alert(
+            "Please enter a number between 1 and " +
+            TOTAL_PHOTOS
+        );
 
     }
 }
 
 
-/* ================================
+/* =====================================================
    SLIDESHOW
-================================ */
+===================================================== */
 
 function toggleSlideshow() {
 
@@ -462,6 +557,7 @@ function toggleSlideshow() {
         slideshowTimer = null;
 
         slideshowBtn.textContent = "▶ Slideshow";
+
         slideshowBtn.classList.remove("stop");
 
     } else {
@@ -471,106 +567,234 @@ function toggleSlideshow() {
         }, 5000);
 
         slideshowBtn.textContent = "■ Stop";
+
         slideshowBtn.classList.add("stop");
 
     }
 }
 
 
-/* ================================
+/* =====================================================
    ZOOM
-================================ */
+===================================================== */
 
 function updateZoom() {
 
-    photo.style.transform = `scale(${zoomLevel})`;
+    if (zoomLevel < 0.5)
+        zoomLevel = 0.5;
 
+    if (zoomLevel > 3)
+        zoomLevel = 3;
+
+    applyTransform();
+
+    if (zoomLevel > 1) {
+        imageContainer.style.cursor = "grab";
+    } else {
+        imageContainer.style.cursor = "default";
+    }
 }
+
 
 function zoomIn() {
 
     zoomLevel += 0.1;
 
-    if (zoomLevel > 3) zoomLevel = 3;
-
     updateZoom();
-
 }
+
 
 function zoomOut() {
 
     zoomLevel -= 0.1;
 
-    if (zoomLevel < 0.5) zoomLevel = 0.5;
-
     updateZoom();
-
 }
+
 
 function resetZoom() {
 
     zoomLevel = 1;
 
-    updateZoom();
+    translateX = 0;
+    translateY = 0;
 
+    applyTransform();
+
+    imageContainer.style.cursor = "default";
 }
 
 
-/* ================================
+/* =====================================================
+   MOUSE PAN
+===================================================== */
+
+imageContainer.addEventListener("mousedown", function(e) {
+
+    if (zoomLevel <= 1)
+        return;
+
+    isDragging = true;
+
+    startX = e.clientX;
+    startY = e.clientY;
+
+    initialTranslateX = translateX;
+    initialTranslateY = translateY;
+
+    imageContainer.style.cursor = "grabbing";
+
+    photo.style.transition = "none";
+
+});
+
+
+window.addEventListener("mousemove", function(e) {
+
+    if (!isDragging)
+        return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    translateX = initialTranslateX + dx;
+    translateY = initialTranslateY + dy;
+
+    applyTransform();
+
+});
+
+
+window.addEventListener("mouseup", function() {
+
+    if (!isDragging)
+        return;
+
+    isDragging = false;
+
+    imageContainer.style.cursor =
+        zoomLevel > 1 ? "grab" : "default";
+
+    photo.style.transition =
+        "transform 0.15s ease";
+
+});
+
+
+/* =====================================================
+   TOUCH PAN
+===================================================== */
+
+let touchStartX = 0;
+let touchStartY = 0;
+
+let touchInitialTranslateX = 0;
+let touchInitialTranslateY = 0;
+
+
+imageContainer.addEventListener("touchstart", function(e) {
+
+    if (zoomLevel <= 1)
+        return;
+
+    const touch = e.touches[0];
+
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+
+    touchInitialTranslateX = translateX;
+    touchInitialTranslateY = translateY;
+
+    photo.style.transition = "none";
+
+}, { passive: true });
+
+
+imageContainer.addEventListener("touchmove", function(e) {
+
+    if (zoomLevel <= 1)
+        return;
+
+    e.preventDefault();
+
+    const touch = e.touches[0];
+
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+
+    translateX = touchInitialTranslateX + dx;
+    translateY = touchInitialTranslateY + dy;
+
+    applyTransform();
+
+}, { passive: false });
+
+
+imageContainer.addEventListener("touchend", function() {
+
+    photo.style.transition =
+        "transform 0.15s ease";
+
+});
+
+
+/* =====================================================
    MOUSE WHEEL ZOOM
-================================ */
+===================================================== */
 
-document.getElementById("imageContainer")
-    .addEventListener("wheel", function(e) {
+imageContainer.addEventListener("wheel", function(e) {
 
-        e.preventDefault();
+    e.preventDefault();
 
-        if (e.deltaY < 0) {
-            zoomIn();
-        } else {
-            zoomOut();
-        }
+    if (e.deltaY < 0) {
+        zoomIn();
+    } else {
+        zoomOut();
+    }
 
-    });
+}, { passive: false });
 
 
-/* ================================
+/* =====================================================
    KEYBOARD CONTROLS
-================================ */
+===================================================== */
 
 document.addEventListener("keydown", function(e) {
 
     if (e.key === "ArrowRight") {
+
         nextPhoto();
-    }
 
-    else if (e.key === "ArrowLeft") {
+    } else if (e.key === "ArrowLeft") {
+
         previousPhoto();
-    }
 
-    else if (e.key === " ") {
+    } else if (e.key === " ") {
+
         e.preventDefault();
+
         toggleSlideshow();
-    }
 
-    else if (e.key === "+") {
+    } else if (e.key === "+" || e.key === "=") {
+
         zoomIn();
-    }
 
-    else if (e.key === "-") {
+    } else if (e.key === "-") {
+
         zoomOut();
-    }
 
-    else if (e.key === "0") {
+    } else if (e.key === "0") {
+
         resetZoom();
+
     }
 
 });
 
 
-/* ================================
+/* =====================================================
    IMAGE ERROR HANDLING
-================================ */
+===================================================== */
 
 photo.onerror = function() {
 
@@ -584,9 +808,9 @@ photo.onerror = function() {
 };
 
 
-/* ================================
+/* =====================================================
    INITIALIZE
-================================ */
+===================================================== */
 
 createPhotoButtons();
 
@@ -596,3 +820,4 @@ showPhoto(1);
 
 </body>
 </html>
+```
